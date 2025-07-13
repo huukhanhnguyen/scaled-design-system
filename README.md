@@ -13,6 +13,7 @@ Most modern design systems are:
 This specification began with a question: **Can we define a full design token system using just math and markdown?**
 
 ## Specification Goals
+
 * Describe **tone-based color interpolation**
 * Describe **font-size-scaled layout units**
 * Define **a minimal set of state tone mappings**
@@ -57,9 +58,7 @@ color - backgroundColor + (themeColor - backgroundColor) * toneScale
 Each tone scale key — such as `plain`, `bare`, `soft`, `subtle`, `base`, `bold` — is a linear multiplier that interpolates between `backgroundColor` and a palette color.
 
 ### Theme Output Colors
-
-Color Tokens by Semantic Key
-
+Auto geneation from `tone scale`
 | Semantic  | Bold    | Base    | Soft    | Subtle  | Bare    | Plain   |
 | --------- | ------- | ------- | ------- | ------- | ------- | ------- |
 | Neutral   | #212121 | #545454 | #aaaaaa | #dddddd | #eeeeee | #ffffff |
@@ -152,8 +151,6 @@ Color Tokens by Semantic Key
 | selected     | Strong Background | **primary** | Input Color | Input Color |
 | checked      | Strong Background | **primary** | Input Color | **primary** |
 
-A simple tone shift table defines UI state colors like `hover`, `focus`, `disabled`, `selected`, etc.
-
 ### Auto-compute Colors for Each State
 
 With input color and tone we can use mapping to compute colors by steps:
@@ -173,6 +170,7 @@ With input color and tone we can use mapping to compute colors by steps:
 ```
 
 All states are resolved by tone offsets — no hardcoding.
+
 ## Dark Mode Strategy
 
 Dark mode uses the same tone logic with a different `backgroundColor` and adjusted palette base colors. All derived tones auto-update by the same formula.
@@ -184,7 +182,7 @@ dark.backgroundColor = "#000000"
 
 Tone logic ensures consistent visual contrast across themes.
 
->  Switching themes does not require redefining all variables. Only base inputs (`palette`, `backgroundColor`) change.
+> Switching themes does not require redefining all variables. Only base inputs (`palette`, `backgroundColor`) change.
 
 ## Token Export Format
 
@@ -231,63 +229,6 @@ Each unit applies to `spacing`, `padding`, and `borderRadius` using scalable `em
 > ✅ `panel`, `block`, `row` can be **nested recursively**
 > ✅ Manual padding exceptions (e.g., main content) allowed
 
-### Row with Multiple Chunks and Cells
-
-```
-            Input Text  Chunk           Button Chunk
-        +------------------------+  +-------------------+
-Row     | prefix | input | suffix|  |  icon   |   text  |
-        +------------------------+  +-------------------+
-```
-
-### Block Containing Rows
-
-```
-+----------------------------------------------+
-|                  Block                       |
-|  +----------------------------------------+  |
-|  |                 Row                    |  |
-|  +----------------------------------------+  |
-|  +----------------------------------------+  |
-|  |                 Row                    |  |
-|  +----------------------------------------+  |
-|  +----------------------------------------+  |
-|  |                 Row                    |  |
-|  +----------------------------------------+  |
-+----------------------------------------------+
-```
-
-### Panel Containing Blocks
-
-```
-+----------------------------------------------+
-|                  Panel                       |
-|  +----------------------------------------+  |
-|  |               Block                    |  |
-|  +----------------------------------------+  |
-|  +----------------------------------------+  |
-|  |               Block                    |  |
-|  +----------------------------------------+  |
-+----------------------------------------------+
-```
-
-### Page Layout
-
-```
-+------------------------------------------------------------+
-|                        Page (Layout)                       |
-|  +----------------------+-------------------------------+  |
-|  | Sidebar Block        |         Header Block          |  |
-|  |                      +-------------------------------+  |
-|  |                      |         Main Panel            |  |
-|  |                      +-------------------------------+  |
-|  |                      |         Footer Block          |  |
-|  +----------------------+-------------------------------+  |
-+------------------------------------------------------------+
-```
-
-This nested box system ensures scalable spacing and layout across device sizes and screen contexts.
-
 ## Use Cases
 
 * **Framework-agnostic theming**: Works in React, Vue, plain HTML/CSS
@@ -297,7 +238,7 @@ This nested box system ensures scalable spacing and layout across device sizes a
 
 ---
 
-## Comparison to Other Systems
+## Comparison
 
 ### Google Material Design
 
@@ -321,6 +262,10 @@ This nested box system ensures scalable spacing and layout across device sizes a
 | **CSS Variables**   | ✔️                   | ✔️                   |
 | **Spec Size**       | 100+ pages + tooling | One markdown spec    |
 
->  Scaled Design System doesn't aim to replace Carbon's UI components, only to offer a composable token-generation strategy.
-## Implementation 
--[Domphy Theme](https://github.com/domphy/theme)
+> Scaled Design System doesn't aim to replace Carbon's UI components, only to offer a composable token-generation strategy.
+
+## Implementation
+
+* [Domphy Theme](https://github.com/domphy/theme)
+  
+License: MIT Copyright: 2025 Author: [Khánh Nguyễn](https://github.com/huukhanhnguyen)
