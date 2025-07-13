@@ -1,6 +1,6 @@
 # Scaled Design System
 
-A compact, scalable, and mathematically predictable design specification enables consistent and accessible design tokens for any implementation — without needing verbose specs or extra tooling.
+A compact, scalable, and mathematically predictable design specification that enables consistent and accessible design tokens for any implementation — without requiring verbose specs or additional tooling.
 
 ## Motivation
 
@@ -9,17 +9,20 @@ Most modern design systems are:
 * Too large to onboard quickly
 * Too rigid or tool-dependent to extend flexibly
 * Too verbose to audit or automate
+* Require a lot of manual work
 
-This specification began with a question: **Can we define a full design token system using just math and markdown?**
+## Design Goals
 
-## Specification Goals
+* How to make colors and sizes consistent
+* How to make the system simple, flexible, and automatic
+* How to write code without constantly referring to documentation
+* Can we define a full design token system using just math and markdown
 
-* Describe **tone-based color interpolation**
-* Describe **font-size-scaled layout units**
-* Define **a minimal set of state tone mappings**
-* Export **CSS variables**
-* Require **no tools or build steps**
-* Be expressed fully in one markdown document
+## Solutions
+
+* **Tone-based color interpolation** instead of using many preset colors
+* **Automatic accessibility for states and interactions** based on visual tone mapping
+* **Box-level sizing based on font-size**, simulating how the brain groups elements visually
 
 ## Tone-based Color Scaling
 
@@ -49,26 +52,45 @@ This specification began with a question: **Can we define a full design token sy
 }
 ```
 
-Instead of hardcoding every visual state color, the Scaled Design System defines a base `backgroundColor` and a color `palette`. The final UI colors are calculated by:
+Instead of hardcoding every color for each visual state, the Scaled Design System defines a base `backgroundColor` and a `palette`. Final UI colors are calculated using:
 
 ```ts
-color - backgroundColor + (themeColor - backgroundColor) * toneScale
+color = backgroundColor + (themeColor - backgroundColor) * toneScale
 ```
 
-Each tone scale key — such as `plain`, `bare`, `soft`, `subtle`, `base`, `bold` — is a linear multiplier that interpolates between `backgroundColor` and a palette color.
+Each tone scale key — such as `plain`, `bare`, `soft`, `subtle`, `base`, `bold` — is a linear multiplier interpolating between `backgroundColor` and a palette color.
 
 ### Theme Output Colors
-Auto geneation from `tone scale`
-| Semantic  | Bold    | Base    | Soft    | Subtle  | Bare    | Plain   |
-| --------- | ------- | ------- | ------- | ------- | ------- | ------- |
-| Neutral   | #212121 | #545454 | #aaaaaa | #dddddd | #eeeeee | #ffffff |
-| Primary   | #004eff | #1677ff | #8bbbff | #d0e4ff | #e8f1ff | #ffffff |
-| Secondary | #f52792 | #f759ab | #fbacd5 | #fddeee | #feeef7 | #ffffff |
-| Error     | #ff181a | #ff4d4f | #ffa6a7 | #ffdbdc | #ffeded | #ffffff |
-| Success   | #14d45a | #4ade80 | #a5efc0 | #dbf8e6 | #edfcf2 | #ffffff |
-| Warning   | #fa7102 | #fb923c | #fdc99e | #fee9d8 | #fff4ec | #ffffff |
-| Info      | #00c6e9 | #22d3ee | #91e9f7 | #d3f6fc | #e9fbfd | #ffffff |
-| Highlight | #f9bd00 | #facc15 | #fde68a | #fef5d0 | #fffae8 | #ffffff |
+
+Auto-generated color tokens by semantic key:
+
+| Semantic  | Bold    | Base        | Soft    | Subtle  | Bare    | Plain   |
+| --------- | ------- | ----------- | ------- | ------- | ------- | ------- |
+| Neutral   | #212121 | **#545454** | #aaaaaa | #dddddd | #eeeeee | #ffffff |
+| Primary   | #004eff | **#1677ff** | #8bbbff | #d0e4ff | #e8f1ff | #ffffff |
+| Secondary | #f52792 | **#f759ab** | #fbacd5 | #fddeee | #feeef7 | #ffffff |
+| Error     | #ff181a | **#ff4d4f** | #ffa6a7 | #ffdbdc | #ffeded | #ffffff |
+| Success   | #14d45a | **#4ade80** | #a5efc0 | #dbf8e6 | #edfcf2 | #ffffff |
+| Warning   | #fa7102 | **#fb923c** | #fdc99e | #fee9d8 | #fff4ec | #ffffff |
+| Info      | #00c6e9 | **#22d3ee** | #91e9f7 | #d3f6fc | #e9fbfd | #ffffff |
+| Highlight | #f9bd00 | **#facc15** | #fde68a | #fef5d0 | #fffae8 | #ffffff |
+
+## Color-Based Accessibility
+
+By adjusting tones for `backgroundColor`, `color`, and `border`, we can automatically generate consistent and accessible states for any component.
+
+### Tone Overview
+
+* Hover: Slight change in background tone
+* Focus: Border tone and border thickness change
+* Active/Checked/Selected: Strong background tone change
+* Disabled/Read-only: Lower contrast through subtle background and text color changes
+
+### Color Mapping
+
+* Focus: Use `primary` instead of the original color
+* Selected/Checked: Use `primary` as the background
+* Disabled/Read-only: Use `neutral` instead of the original color
 
 ## Visual Tone Table
 
@@ -85,9 +107,6 @@ Auto geneation from `tone scale`
 
 ### Soft Background
 
-* ±1 tone Background
-* Color and Border unchanged
-
 | Background | Color | Border |
 | ---------- | ----- | ------ |
 | bare       | base  | subtle |
@@ -98,10 +117,6 @@ Auto geneation from `tone scale`
 
 ### Low Contrast
 
-* ±1 tone Background
-* ±1 tone Color
-* tone Color equals Border
-
 | Background | Color | Border |
 | ---------- | ----- | ------ |
 | bare       | soft  | soft   |
@@ -111,9 +126,6 @@ Auto geneation from `tone scale`
 | bold       | bare  | bare   |
 
 ### Strong Border
-
-* ±1 tone Border
-* Color and Background unchanged
 
 | Background | Color | Border |
 | ---------- | ----- | ------ |
@@ -126,9 +138,6 @@ Auto geneation from `tone scale`
 
 ### Strong Background
 
-* ±1 tone Background
-* Color and Border unchanged
-
 | Background | Color | Border |
 | ---------- | ----- | ------ |
 | subtle     | bold  | subtle |
@@ -136,7 +145,7 @@ Auto geneation from `tone scale`
 | base       | plain | soft   |
 | bold       | plain | base   |
 
-## Visual State Mapping
+### Visual State Mapping
 
 | State        | Visual Tone       | Background  | Color       | Border      |
 | ------------ | ----------------- | ----------- | ----------- | ----------- |
@@ -144,20 +153,18 @@ Auto geneation from `tone scale`
 | visited      | Normal            | Input Color | Input Color | Input Color |
 | hover        | Soft Background   | Input Color | Input Color | Input Color |
 | readonly     | Soft Background   | Input Color | Input Color | Input Color |
-| **disabled** | Low Contrast      | **neutral** | **neutral** | **neutral** |
+| disabled     | Low Contrast      | **neutral** | **neutral** | **neutral** |
 | focus        | Strong Border     | Input Color | Input Color | **primary** |
 | invalid      | Strong Border     | Input Color | Input Color | **error**   |
 | active       | Strong Background | Input Color | Input Color | Input Color |
 | selected     | Strong Background | **primary** | Input Color | Input Color |
 | checked      | Strong Background | **primary** | Input Color | **primary** |
 
-### Auto-compute Colors for Each State
+All states are derived using tone adjustments — no hardcoded values.
 
-With input color and tone we can use mapping to compute colors by steps:
-
-* Each state can define tone of `background`, `color`, and `border`
-* Based on Theme Output we know the values
-* The result is computed and used as CSS variables
+### Auto-computed State Colors
+So with  `themeColor` and `themeTone` inputs we can compute `backgroundColor` `color` `borderColor` of each states any components
+Example:
 
 ```ts
 {
@@ -169,24 +176,20 @@ With input color and tone we can use mapping to compute colors by steps:
 }
 ```
 
-All states are resolved by tone offsets — no hardcoding.
-
 ## Dark Mode Strategy
 
-Dark mode uses the same tone logic with a different `backgroundColor` and adjusted palette base colors. All derived tones auto-update by the same formula.
+Dark mode uses the same tone logic with a different `backgroundColor` and modified base palette. All tones update automatically using the same formula.
 
 ```ts
 light.backgroundColor = "#ffffff"
 dark.backgroundColor = "#000000"
 ```
 
-Tone logic ensures consistent visual contrast across themes.
+> Switching themes only requires changing `palette` and `backgroundColor`.
 
-> Switching themes does not require redefining all variables. Only base inputs (`palette`, `backgroundColor`) change.
+## Color Token Export Format
 
-## Token Export Format
-
-Each computed token can be exported as CSS custom properties:
+Tokens can be exported as CSS variables:
 
 ```css
 :root {
@@ -200,7 +203,7 @@ Each computed token can be exported as CSS custom properties:
 }
 ```
 
-You can namespace by theme:
+With theme namespaces:
 
 ```css
 :root[data-theme="light"] {
@@ -211,61 +214,155 @@ You can namespace by theme:
 }
 ```
 
-## Box-level Spacing & Sizing
+## Box-level Layout
 
-Define your layout by logical `boxSize` units:
+### Theme Layout Input
 
-| Token   | Description                                                                          |
-| ------- | ------------------------------------------------------------------------------------ |
-| `cell`  | Input(checkbox, radio, text, select), text, icons, smallest unit                     |
-| `chunk` | Horizontal group of cells, e.g., Button\[icon,text], InputText\[prefix,input,suffix] |
-| `row`   | Horizontal group of chunks, e.g., Field + InputText                                  |
-| `block` | Card or modal containing rows                                                        |
-| `panel` | Contains blocks                                                                      |
-| `page`  | Contains panels/blocks                                                               |
+```js
+radius: {
+  cell: "0.2em",
+  chunk: "0.3em",
+  row: "0.4em",
+  block: "0.6em",
+  section: "0.8em",
+  panel: "1em",
+  page: "1.2em",
+},
+spacing: {
+  cell: "0.3em",
+  chunk: "0.6em",
+  row: "0.3em",
+  block: "1em",
+  section: "1.4em",
+  panel: "1.8em",
+  page: "2.2em",
+},
+padding: {
+  cell: "0.1em 0.1em",
+  chunk: "0.1em 0.3em",
+  row: "0.1em 0.3em",
+  block: "0.6em 0.6em",
+  section: "0.8em 0.4em",
+  panel: "1.6em 0.8em",
+  page: "3em 2em",
+}
+```
 
-Each unit applies to `spacing`, `padding`, and `borderRadius` using scalable `em` values tied to `fontSize`.
+* All units use `em` to scale with `fontSize`
+* `padding`: internal spacing
+* `spacing`: external spacing (`margin`, `gap`)
+* `radius`: border-radius
 
-> ✅ `panel`, `block`, `row` can be **nested recursively**
-> ✅ Manual padding exceptions (e.g., main content) allowed
+### Box Size Definitions
+
+| Token   | Description                                                                    |
+| ------- | ------------------------------------------------------------------------------ |
+| `cell`  | Input (checkbox, text, etc.), icon, text — smallest unit                       |
+| `chunk` | Horizontal group of cells (e.g., Button \[icon, text], InputText \[prefix...]) |
+| `row`   | Horizontal group of chunks                                                     |
+| `block` | Card or modal containing rows                                                  |
+| `panel` | Contains blocks                                                                |
+| `page`  | Contains panels or blocks                                                      |
+
+> ✅ `panel`, `block`, `row` can be nested
+> ✅ Manual overrides allowed for content
+
+## Typography
+
+### Typography Input
+
+```js
+fontSize: {
+  h6: "1.1rem",
+  h5: "1.2rem",
+  h4: "1.3rem",
+  h3: "1.5rem",
+  h2: "1.75rem",
+  h1: "2rem",
+  sm: "0.85rem",
+  md: "1rem",
+  lg: "1.1rem",
+},
+lineHeight: {
+  h6: 1.2,
+  h5: 1.3,
+  h4: 1.5,
+  h3: 1.75,
+  h2: 2,
+  h1: 2.5,
+  sm: 1.1,
+  md: 1.4,
+  lg: 1.6,
+},
+fontWeight: {
+  h6: 500,
+  h5: 500,
+  h4: 500,
+  h3: 700,
+  h2: 700,
+  h1: 700,
+  sm: 500,
+  md: 500,
+  lg: 500,
+},
+fontFamily: {
+  heading: '"Roboto", "Arial", sans-serif',
+  text: '"Roboto","Inter", "Helvetica Neue", sans-serif',
+  mono: '"Courier New", monospace',
+},
+```
+
+### Typography Scaling
+
+Sizes like `sm`, `md`, `lg` define component variants. Combined with `em`-based layout sizes, components scale automatically.
+
+### Typography Token Export
+
+```css
+:root {
+  --fontSize-sm: 0.85rem;
+  --fontSize-md: 1rem;
+  --fontSize-lg: 1.1rem;
+  ...
+}
+```
 
 ## Use Cases
 
-* **Framework-agnostic theming**: Works in React, Vue, plain HTML/CSS
-* **Accessible design by default**: Contrast-aware tone mapping
-* **Scalable spacing**: Layout consistency across devices & components
-* **Server-side rendering**: Generates CSS directly
+* **Framework-agnostic**: Works with React, Vue, or plain HTML/CSS
+* **Accessible by default**: Tone-based contrast mapping
+* **Scalable layout**: Consistent spacing on all screen sizes
+* **SSR-friendly**: Outputs CSS directly
 
----
 
-## Comparison
+## Comparison to Other Systems
 
 ### Google Material Design
 
-| Feature               | Material Design     | Scaled Design System            |
-| --------------------- | ------------------- | ------------------------------- |
-| **Token Granularity** | High (over 1,000)   | Minimal & scalable              |
-| **Color Definition**  | Predefined palettes | Auto-generated by tone math     |
-| **Visual States**     | Manually listed     | Dynamically calculated          |
-| **Spec Length**       | 100s of pages       | One .md file                    |
-| **Accessibility**     | Supported           | Built-in by tone contrast logic |
+| Feature               | Material Design     | Scaled Design System           |
+| --------------------- | ------------------- | ------------------------------ |
+| **Token Granularity** | High (1000+)        | Minimal & scalable             |
+| **Color Definition**  | Predefined palettes | Auto-generated with tone logic |
+| **Visual States**     | Manually defined    | Dynamically calculated         |
+| **Spec Length**       | 100s of pages       | One markdown file              |
+| **Accessibility**     | Supported           | Built-in tone contrast logic   |
 
-> Scaled Design System aims to be a minimalist alternative — not a clone. It achieves similar flexibility using scalable math, not verbosity.
+> Scaled Design System is a minimalist alternative — not a clone. It achieves flexibility through math instead of verbosity.
 
-### Carbon Design System (IBM)
+### IBM Carbon Design System
 
 | Feature             | Carbon System        | Scaled Design System |
 | ------------------- | -------------------- | -------------------- |
 | **Layout Grid**     | 2x/4x Grid           | Box-level scaling    |
-| **Color Themes**    | Predefined + tools   | Palette × tone math  |
+| **Color Themes**    | Predefined + tooling | Palette × tone math  |
 | **Component Scope** | Full UI kit          | Token logic only     |
 | **CSS Variables**   | ✔️                   | ✔️                   |
-| **Spec Size**       | 100+ pages + tooling | One markdown spec    |
+| **Spec Size**       | 100+ pages + tooling | One markdown file    |
 
-> Scaled Design System doesn't aim to replace Carbon's UI components, only to offer a composable token-generation strategy.
+> Scaled Design System is not a UI kit replacement. It offers a predictable, composable token-generation strategy.
 
 ## Implementation
 
 * [Domphy Theme](https://github.com/domphy/theme)
-  
-License: MIT Copyright: 2025 Author: [Khánh Nguyễn](https://github.com/huukhanhnguyen)
+
+License: MIT Copyright 2025 Author: [Khánh Nguyễn](https://github.com/huukhanhnguyen)
