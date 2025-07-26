@@ -220,7 +220,7 @@ With theme namespaces:
 
 ```js
 radius: {
-  cell: "0.2em",
+  inline: "0", // for explatation no use 
   chunk: "0.3em",
   row: "0.4em",
   block: "0.6em",
@@ -228,8 +228,8 @@ radius: {
   panel: "1em",
   page: "1.2em",
 },
-spacing: {
-  cell: "0.3em",
+gap: { 
+  inline: "0.4em", // spacing between text/icon/checkbox/radio
   chunk: "0.6em",
   row: "0.3em",
   block: "1em",
@@ -238,7 +238,7 @@ spacing: {
   page: "2.2em",
 },
 padding: {
-  cell: "0.1em 0.1em",
+  inline: "0", // for explatation no use
   chunk: "0.1em 0.3em",
   row: "0.1em 0.3em",
   block: "0.6em 0.6em",
@@ -249,16 +249,16 @@ padding: {
 ```
 
 * All units use `em` to scale with `fontSize`
-* `padding`: internal spacing
-* `spacing`: external spacing (`margin`, `gap`)
+* `padding`: padding of current box
+* `gap`: spacing between children
 * `radius`: border-radius
 
 ### Box Size Definitions
 
 | Token   | Description                                                                    |
 | ------- | ------------------------------------------------------------------------------ |
-| `cell`  | Input (checkbox, text, etc.), icon, text — smallest unit                       |
-| `chunk` | Horizontal group of cells (e.g., Button \[icon, text], InputText \[prefix...]) |
+| `inline`  | Input (checkbox, text, etc.), icon, text — smallest unit                       |
+| `chunk` | Horizontal group of inlines (e.g., Button \[icon, text], InputText \[prefix...]) |
 | `row`   | Horizontal group of chunks                                                     |
 | `block` | Card or modal containing rows                                                  |
 | `panel` | Contains blocks                                                                |
