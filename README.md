@@ -220,7 +220,7 @@ With theme namespaces:
 
 ```js
 radius: {
-  inline: "0", // for explatation no use 
+  inline: "0.2", // checkbox radius
   chunk: "0.3em",
   row: "0.4em",
   block: "0.6em",
