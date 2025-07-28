@@ -222,30 +222,18 @@ With theme namespaces:
 borderRadius: {
     inline: "0.2em",
     chunk: "0.4em",
-    row: "0.4em",
     block: "0.6em",
-    section: "0.8em",
-    panel: "1em",
-    page: "1.2em",
   },
   gap: {
     inlineBox: "0.3em",// readonly
     inline: "0.4em",
     chunk: "0.6em",
-    row: "0.9em",
     block: "1.2em",
-    section: "1.5em",
-    panel: "1.8em",
-    page: "2.2em",
   },
   padding: {
     inline: "0em",// readonly must be 0
     chunk: "0.25em 0.75em",
-    row: "0.3em 0.6em",
     block: "0.6em 0.6em",
-    section: "0.8em 0.4em",
-    panel: "1.6em 0.8em",
-    page: "3em 2em",
   }
 ```
 
@@ -261,10 +249,7 @@ borderRadius: {
 | `inline`  | text/checkbox/radio/icon, etc. — smallest unit has no padding                    |
 | `inlineBox`  | tag/chip/caption/badge, etc. — has padding and it's height = inline lineHeight                        |
 | `chunk` | Horizontal group of inlines (e.g., Button \[icon, text], InputText \[prefix...]) |
-| `row`   | Horizontal group of chunks                                                     |
-| `block` | Card or modal containing rows                                                  |
-| `panel` | Contains blocks                                                                |
-| `page`  | Contains panels or blocks                                                      |
+| `block` | Any component larger than `chunk`, usage nested composing blocks                                                 |
 
 >`inlineBox`  A compact inline element style for highlighting text with padding and background, maintaining line alignment within text flow. Best using for inline tag/chip/badge or any highlighted inline element. InlineBox has no fixed theme input, it must computed from current theme text size
 
@@ -286,50 +271,31 @@ inlineBox(size: TextSize) {
     };
   }
 ```
+>After block, the system imposes no further layout rules.
+Page-level composition such as columns, sections, margins, or responsive grid behavior are intentionally left unconstrained, allowing complete design flexibility without system interference.
+
 ### Visual Box
 ```
             InpuText  Chunk            Button Chunk
         +------------------------+  +-------------------+
-Row     | prefix | input | suffix|  |  icon   |   text  |
+Block   | prefix | input | suffix|  |  icon   |   text  |
         +------------------------+  +-------------------+
 ```
 ```
 +----------------------------------------------+
 |                  Block                       |
 |  +----------------------------------------+  |
-|  |                 Row                    |  |
+|  |                Block                   |  |
 |  +----------------------------------------+  |
 |  +----------------------------------------+  |
-|  |                 Row                    |  |
+|  |                Block                   |  |
 |  +----------------------------------------+  |
 |  +----------------------------------------+  |
-|  |                 Row                    |  |
-|  +----------------------------------------+  |
-+----------------------------------------------+
-```
-```
-+----------------------------------------------+
-|                  Panel                       |
-|  +----------------------------------------+  |
-|  |               Block                    |  |
-|  +----------------------------------------+  |
-|  +----------------------------------------+  |
-|  |               Block                    |  |
+|  |                Block                   |  |
 |  +----------------------------------------+  |
 +----------------------------------------------+
 ```
-```
-+------------------------------------------------------------+
-|                        Page (Layout)                       |
-|  +----------------------+-------------------------------+  |
-|  | Sidebar Block        |         Header Block          |  |
-|  |                      +-------------------------------+  |
-|  |                      |         Main Panel            |  |
-|  |                      +-------------------------------+  |
-|  |                      |         Footer Block          |  |
-|  +----------------------+-------------------------------+  |
-+------------------------------------------------------------+
-```
+
 ## Typography
 
 ### Typography Input
