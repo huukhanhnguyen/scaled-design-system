@@ -219,54 +219,117 @@ With theme namespaces:
 ### Theme Layout Input
 
 ```js
-radius: {
-  inline: "0.2", // checkbox radius
-  chunk: "0.3em",
-  row: "0.4em",
-  block: "0.6em",
-  section: "0.8em",
-  panel: "1em",
-  page: "1.2em",
-},
-gap: { 
-  inline: "0.4em", // spacing between text/icon/checkbox/radio
-  chunk: "0.6em",
-  row: "0.3em",
-  block: "1em",
-  section: "1.4em",
-  panel: "1.8em",
-  page: "2.2em",
-},
-padding: {
-  inline: "0", // for explatation no use
-  chunk: "0.1em 0.3em",
-  row: "0.1em 0.3em",
-  block: "0.6em 0.6em",
-  section: "0.8em 0.4em",
-  panel: "1.6em 0.8em",
-  page: "3em 2em",
-}
+borderRadius: {
+    inline: "0.2em",
+    chunk: "0.4em",
+    row: "0.4em",
+    block: "0.6em",
+    section: "0.8em",
+    panel: "1em",
+    page: "1.2em",
+  },
+  gap: {
+    inlineBox: "0.3em",// readonly
+    inline: "0.4em",
+    chunk: "0.6em",
+    row: "0.9em",
+    block: "1.2em",
+    section: "1.5em",
+    panel: "1.8em",
+    page: "2.2em",
+  },
+  padding: {
+    inline: "0em",// readonly must be 0
+    chunk: "0.25em 0.75em",
+    row: "0.3em 0.6em",
+    block: "0.6em 0.6em",
+    section: "0.8em 0.4em",
+    panel: "1.6em 0.8em",
+    page: "3em 2em",
+  }
 ```
 
 * All units use `em` to scale with `fontSize`
 * `padding`: padding of current box
 * `gap`: spacing between children
-* `radius`: border-radius
+* `borderRadius`: border-radius
 
 ### Box Size Definitions
 
 | Token   | Description                                                                    |
 | ------- | ------------------------------------------------------------------------------ |
-| `inline`  | Input (checkbox, text, etc.), icon, text — smallest unit                       |
+| `inline`  | text/checkbox/radio/icon, etc. — smallest unit has no padding                    |
+| `inlineBox`  | tag/chip/caption/badge, etc. — has padding and it's height = inline lineHeight                        |
 | `chunk` | Horizontal group of inlines (e.g., Button \[icon, text], InputText \[prefix...]) |
 | `row`   | Horizontal group of chunks                                                     |
 | `block` | Card or modal containing rows                                                  |
 | `panel` | Contains blocks                                                                |
 | `page`  | Contains panels or blocks                                                      |
 
-> ✅ `panel`, `block`, `row` can be nested
-> ✅ Manual overrides allowed for content
+>`inlineBox`  A compact inline element style for highlighting text with padding and background, maintaining line alignment within text flow. Best using for inline tag/chip/badge or any highlighted inline element. InlineBox has no fixed theme input, it must computed from current theme text size
 
+Reference formula compute inlineBox by theme text size:
+```ts
+inlineBox(size: TextSize) {
+    let tokens = this.themeTokens;
+    let currentFontSize = tokens.fontSize[size];
+    const numeric = parseFloat(currentFontSize); // rem
+    let currentHeight = tokens.lineHeight[size]*numeric;
+    
+
+    return {
+      fontSize: (currentHeight * 0.8)/1.3 + "rem",
+      lineHeight: (currentHeight * 0.8) + "rem",
+      padding: `${currentHeight * 0.1}rem ${currentHeight * 0.3}rem`,
+      gap: `${currentHeight * 0.3}rem`,
+      borderRadius: `${currentHeight * 0.1}rem`,
+    };
+  }
+```
+### Visual Box
+```
+            InpuText  Chunk            Button Chunk
+        +------------------------+  +-------------------+
+Row     | prefix | input | suffix|  |  icon   |   text  |
+        +------------------------+  +-------------------+
+```
+```
++----------------------------------------------+
+|                  Block                       |
+|  +----------------------------------------+  |
+|  |                 Row                    |  |
+|  +----------------------------------------+  |
+|  +----------------------------------------+  |
+|  |                 Row                    |  |
+|  +----------------------------------------+  |
+|  +----------------------------------------+  |
+|  |                 Row                    |  |
+|  +----------------------------------------+  |
++----------------------------------------------+
+```
+```
++----------------------------------------------+
+|                  Panel                       |
+|  +----------------------------------------+  |
+|  |               Block                    |  |
+|  +----------------------------------------+  |
+|  +----------------------------------------+  |
+|  |               Block                    |  |
+|  +----------------------------------------+  |
++----------------------------------------------+
+```
+```
++------------------------------------------------------------+
+|                        Page (Layout)                       |
+|  +----------------------+-------------------------------+  |
+|  | Sidebar Block        |         Header Block          |  |
+|  |                      +-------------------------------+  |
+|  |                      |         Main Panel            |  |
+|  |                      +-------------------------------+  |
+|  |                      |         Footer Block          |  |
+|  +----------------------+-------------------------------+  |
++------------------------------------------------------------+
+```
 ## Typography
 
 ### Typography Input
