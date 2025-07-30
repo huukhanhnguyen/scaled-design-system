@@ -246,31 +246,10 @@ borderRadius: {
 
 | Token   | Description                                                                    |
 | ------- | ------------------------------------------------------------------------------ |
-| `inline`  | text/checkbox/radio/icon, etc. — smallest unit has no padding                    |
-| `inlineBox`  | tag/chip/caption/badge, etc. — has padding and it's height = inline lineHeight                        |
+| `inline`  | text/checkbox/radio/icon/tag/chip/caption/badge, etc. — smallest unit                    |
 | `chunk` | Horizontal group of inlines (e.g., Button \[icon, text], InputText \[prefix...]) |
 | `block` | Any component larger than `chunk`, usage nested composing blocks                                                 |
 
->`inlineBox`  A compact inline element style for highlighting text with padding and background, maintaining line alignment within text flow. Best using for inline tag/chip/badge or any highlighted inline element. InlineBox has no fixed theme input, it must computed from current theme text size
-
-Reference formula compute inlineBox by theme text size:
-```ts
-inlineBox(size: TextSize) {
-    let tokens = this.themeTokens;
-    let currentFontSize = tokens.fontSize[size];
-    const numeric = parseFloat(currentFontSize); // rem
-    let currentHeight = tokens.lineHeight[size]*numeric;
-    
-
-    return {
-      fontSize: (currentHeight * 0.8)/1.3 + "rem",
-      lineHeight: (currentHeight * 0.8) + "rem",
-      padding: `${currentHeight * 0.1}rem ${currentHeight * 0.3}rem`,
-      gap: `${currentHeight * 0.3}rem`,
-      borderRadius: `${currentHeight * 0.1}rem`,
-    };
-  }
-```
 >After block, the system imposes no further layout rules.
 Page-level composition such as columns, sections, margins, or responsive grid behavior are intentionally left unconstrained, allowing complete design flexibility without system interference.
 
