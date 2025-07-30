@@ -247,7 +247,7 @@ borderRadius: {
 | Token   | Description                                                                    |
 | ------- | ------------------------------------------------------------------------------ |
 | `inline`  | text/checkbox/radio/icon/tag/chip/caption/badge, etc. — smallest unit                    |
-| `chunk` | Horizontal group of inlines (e.g., Button \[icon, text], InputText \[prefix...]) |
+| `bar` | Horizontal group of inlines (e.g., Button,InputText,Select,) |
 | `block` | Any component larger than `chunk`, usage nested composing blocks                                                 |
 
 >After block, the system imposes no further layout rules.
@@ -255,7 +255,7 @@ Page-level composition such as columns, sections, margins, or responsive grid be
 
 ### Visual Box
 ```
-            InpuText  Chunk            Button Chunk
+            InpuText Bar            Button Bar
         +------------------------+  +-------------------+
 Block   | prefix | input | suffix|  |  icon   |   text  |
         +------------------------+  +-------------------+
