@@ -31,136 +31,133 @@ Most modern design systems are:
 ```js
 {
   palette: {
-    neutral: "#545454",
+    neutral: "#5e5e5e",
     primary: "#1677FF",
     secondary: "#f759ab",
     error: "#ff4d4f",
+    attention: "#ff6a4d",
     success: "#4ade80",
     warning: "#fb923c",
     info: "#22d3ee",
     highlight: "#facc15",
   },
   backgroundColor: "#ffffff",
+  contrastColor: "#000000",
   toneScale: {
-    bold: 1.3,
-    base: 1,
-    soft: 0.5,
-    subtle: 0.2,
+    plain: 0,
     bare: 0.1,
-    plain: 0
-  },
+    slight: 0.2,
+    gentle: 0.3,
+    subtle: 0.4,
+    base: 0.5,
+    bold: 0.65,
+    intense: 0.8,
+    extreme: 1,
+  }
 }
 ```
-
-Instead of hardcoding every color for each visual state, the Scaled Design System defines a base `backgroundColor` and a `palette`. Final UI colors are calculated using:
+### Tones
+- `plain → bare → slight →gentle→ subtle → base → bold→ intense→ extreme`
+- `plain` nearly to backgroundColor
+- `extreme` nearly to contrastColor
+- index define: next = previous + 1
+### Color Formula
+Instead of hardcoding every color for each visual state, the Scaled Design System defines simple `palette`. Final UI colors are calculated using:
 
 ```ts
-color = backgroundColor + (themeColor - backgroundColor) * toneScale
+let baseScale = toneScale.base
+// toneScale == base
+color = themeColor
+// toneScale < base
+color = backgroundColor + (themeColor - backgroundColor) * toneScale/baseScale
+
+// toneScale > base
+color = contrastColor + (contrastColor - themeColor) * (toneScale-baseScale)/(1-baseScale)
 ```
-
-Each tone scale key — such as `plain`, `bare`, `soft`, `subtle`, `base`, `bold` — is a linear multiplier interpolating between `backgroundColor` and a palette color.
-
 ### Theme Output Colors
 
 Auto-generated color tokens by semantic key:
+### 🎨 Bảng mã màu theo tone
 
-| Semantic  | Bold    | Base        | Soft    | Subtle  | Bare    | Plain   |
-| --------- | ------- | ----------- | ------- | ------- | ------- | ------- |
-| Neutral   | #212121 | **#545454** | #aaaaaa | #dddddd | #eeeeee | #ffffff |
-| Primary   | #004eff | **#1677ff** | #8bbbff | #d0e4ff | #e8f1ff | #ffffff |
-| Secondary | #f52792 | **#f759ab** | #fbacd5 | #fddeee | #feeef7 | #ffffff |
-| Error     | #ff181a | **#ff4d4f** | #ffa6a7 | #ffdbdc | #ffeded | #ffffff |
-| Success   | #14d45a | **#4ade80** | #a5efc0 | #dbf8e6 | #edfcf2 | #ffffff |
-| Warning   | #fa7102 | **#fb923c** | #fdc99e | #fee9d8 | #fff4ec | #ffffff |
-| Info      | #00c6e9 | **#22d3ee** | #91e9f7 | #d3f6fc | #e9fbfd | #ffffff |
-| Highlight | #f9bd00 | **#facc15** | #fde68a | #fef5d0 | #fffae8 | #ffffff |
+| Tone       | Neutral   | Primary   | Secondary | Error     | Attention | Success   | Warning   | Info      | Highlight |
+|------------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|
+| `plain`    | #ffffff   | #ffffff   | #ffffff   | #ffffff   | #ffffff   | #ffffff   | #ffffff   | #ffffff   | #ffffff   |
+| `bare`     | #dfdfdf   | #d0e4ff   | #fddeee   | #ffdbdc   | #ffe1db   | #dbf8e6   | #fee9d8   | #d3f6fc   | #fef5d0   |
+| `slight`   | #bfbfbf   | #a2c9ff   | #fcbddd   | #ffb8b9   | #ffc3b8   | #b7f2cc   | #fdd3b1   | #a7edf8   | #fdeba1   |
+| `gentle`   | #9e9e9e   | #73adff   | #fa9bcd   | #ff9495   | #ffa694   | #92ebb3   | #fdbe8a   | #7ae5f5   | #fce073   |
+| `subtle`   | #7e7e7e   | #4592ff   | #f97abc   | #ff7172   | #ff8871   | #6ee599   | #fca863   | #4edcf1   | #fbd644   |
+| `base`     | #5e5e5e   | #1677ff   | #f759ab   | #ff4d4f   | #ff6a4d   | #4ade80   | #fb923c   | #22d3ee   | #facc15   |
+| `bold`     | #424242   | #0f53b3   | #ad3e78   | #b33637   | #b34a36   | #349b5a   | #b0662a   | #1894a7   | #af8f0f   |
+| `intense`  | #262626   | #093066   | #632444   | #661f20   | #662a1f   | #1e5933   | #643a18   | #0e545f   | #645208   |
+| `extreme`  | #000000   | #000000   | #000000   | #000000   | #000000   | #000000   | #000000   | #000000   | #000000   |
 
-## Color-Based Accessibility
+- Output colors in format theme[tone][color]
 
-By adjusting tones for `backgroundColor`, `color`, and `border`, we can automatically generate consistent and accessible states for any component.
 
-### Tone Overview
+### Background Tone Variants
 
-* Hover: Slight change in background tone
-* Focus: Border tone and border thickness change
-* Active/Checked/Selected: Strong background tone change
-* Disabled/Read-only: Lower contrast through subtle background and text color changes
+| variants  | plain | bare | slight | gentle | subtle | base | bold | intense | extreme |
+| ------- | ----- | ---- | ------ | ------ | ------ | ---- | ---- | ------- | ------- |
+| soft    | +1    | +1   | +1     | +1     | +1     | -1   | -1   | -1      | -1      |
+| default | 0     | 0    | 0      | 0      | 0      | 0    | 0    | 0       | 0       |
+| strong  | +2    | +2   | +2     | +2     | +2     | -2   | -2   | -2      | -2      |
 
-### Color Mapping
+- Example: `soft`at `plain` = plain   + 1 =  `bare`
+### Text Color Tone Variants
+Text tone  = BackgroundTone ± level to ensure readibility
 
-* Focus: Use `primary` instead of the original color
-* Selected/Checked: Use `primary` as the background
-* Disabled/Read-only: Use `neutral` instead of the original color
+| variants  | plain | bare | slight | gentle | subtle | base | bold | intense | extreme |
+| ------- | ----- | ---- | ------ | ------ | ------ | ---- | ---- | ------- | ------- |
+| soft    | +4    | +4   | +4     | +4     | +4     | -3   | -4   | -4      | -4      |
+| default | +5    | +5   | +5     | +5     | -3     | -4   | -5   | -5      | -5      |
+| strong  | +6    | +6   | +6     | -3     | -4     | -5   | -6   | -6      | -6      |
 
-## Visual Tone Table
+### Border Color Tone Variants
+- Border tone  = BackgroundTone ± level smaler than contrast of text
 
-### Normal
+| adjust  | plain | bare | gentle | subtle | soft | base | strong | bold | extreme |
+| ------- | ----- | ---- | ------ | ------ | ---- | ---- | ------ | ---- | ------- |
+| soft    | +1    | +1   | +1     | +1     | -1   | -1   | -1     | -1   | -1      |
+| default | +2    | +2   | +2     | +2     | -2   | -2   | -2     | -2   | -2      |
+| strong  | +3    | +3   | +3     | +3     | -2   | -3   | -3     | -3   | -3      |
 
-| Background | Color | Border |
-| ---------- | ----- | ------ |
-| plain      | base  | subtle |
-| bare       | base  | soft   |
-| subtle     | bold  | soft   |
-| soft       | plain | base   |
-| base       | plain | subtle |
-| bold       | plain | subtle |
+### Color Variants in code
+```
+const backgroundTones = {
+  soft: [1, 1, -1, 1, -1, -1, -1, -1, -1],
+  default: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  strong: [2, 2, 2, 2, -2, -2, -2, -2, -2],
+} as const;
 
-### Soft Background
+const textTones = {
+  soft: [4, 4, 4, 4, -3, -4, -4, -4, -4, -4],
+  default: [5, 5, 5, 5, -3, -4, -5, -5, -5],
+  strong: [6, 6, 6, -3, -4, -5, -6, -6, -6],
+} as const;
 
-| Background | Color | Border |
-| ---------- | ----- | ------ |
-| bare       | base  | subtle |
-| subtle     | base  | soft   |
-| soft       | bold  | soft   |
-| base       | plain | base   |
-| bold       | plain | subtle |
+const borderTones = {
+  soft: [1, 1, 1, 1, -1, -1, -1, -1, -1],
+  default: [2, 2, 2, 2, -2, -2, -2, -2, -2],
+  strong: [3, 3, 3, 3, -2, -3, -3, -3, -3],
+} as const;
+```
+### Component State Colors
 
-### Low Contrast
+| states | background | text    | border  | color     | description        |
+| ---------------- | ---------- | ------- | ------- | --------- | ------------------ |
+| default          | default    | default | default | theme     | Normal appearance  |
+| hover            | soft       | soft    | default | theme     | Hover effect       |
+| active           | strong     | strong  | default | theme     | Pressed state      |
+| selected         | strong     | strong  | default | primary   | Selected item      |
+| checked          | strong     | default | strong  | primary   | Checked state      |
+| readonly         | default    | soft    | soft    | neutral   | Read-only element  |
+| focus            | default    | default | strong  | primary   | Focused element    |
+| invalid          | default    | default | strong  | error     | Invalid input      |
+| disable          | soft       | soft    | soft    | neutral   | Disabled state     |
+| visited          | default    | default | default | secondary | Visited link       |
+| current          | default    | default | strong  | primary   | Active/current tab |
 
-| Background | Color | Border |
-| ---------- | ----- | ------ |
-| bare       | soft  | soft   |
-| subtle     | soft  | soft   |
-| soft       | base  | base   |
-| base       | bare  | bare   |
-| bold       | bare  | bare   |
-
-### Strong Border
-
-| Background | Color | Border |
-| ---------- | ----- | ------ |
-| plain      | base  | soft   |
-| bare       | base  | base   |
-| subtle     | bold  | base   |
-| soft       | plain | bold   |
-| base       | plain | soft   |
-| bold       | plain | soft   |
-
-### Strong Background
-
-| Background | Color | Border |
-| ---------- | ----- | ------ |
-| subtle     | bold  | subtle |
-| soft       | plain | soft   |
-| base       | plain | soft   |
-| bold       | plain | base   |
-
-### Visual State Mapping
-
-| State        | Visual Tone       | Background  | Color       | Border      |
-| ------------ | ----------------- | ----------- | ----------- | ----------- |
-| normal       | Normal            | Input Color | Input Color | Input Color |
-| visited      | Normal            | Input Color | Input Color | Input Color |
-| hover        | Soft Background   | Input Color | Input Color | Input Color |
-| readonly     | Soft Background   | Input Color | Input Color | Input Color |
-| disabled     | Low Contrast      | **neutral** | **neutral** | **neutral** |
-| focus        | Strong Border     | Input Color | Input Color | **primary** |
-| invalid      | Strong Border     | Input Color | Input Color | **error**   |
-| active       | Strong Background | Input Color | Input Color | Input Color |
-| selected     | Strong Background | **primary** | Input Color | Input Color |
-| checked      | Strong Background | **primary** | Input Color | **primary** |
-
-All states are derived using tone adjustments — no hardcoded values.
+- `current` is custom state then use with `aria-current` attributes and css, it need for distingush with `selected` form behaviour
 
 ### Auto-computed State Colors
 So with  `themeColor` and `themeTone` inputs we can compute `backgroundColor` `color` `borderColor` of each states any components
@@ -175,14 +172,22 @@ Example:
   ...
 }
 ```
-
+> low level usage can use with direct variant of colors, each properties {color,borderColor,backgroundColor} has {default,soft,strong}  variant. Example input value must `strong`, `placeholder` must `soft` and `label` must `default`. It make slightly distingush with thout depend on font weight and bold (too strong)
+## Multi Tone Strategy
+The tones system work like theme-in-theme mean that we can use multi tone each page. 
+Example in light theme we can use `plain` tone in main and where `popover` we can use `base` or more stronger to make dark mode. All state colors automatic compute so do not need manual adjustment for dark 'popup'
 ## Dark Mode Strategy
 
 Dark mode uses the same tone logic with a different `backgroundColor` and modified base palette. All tones update automatically using the same formula.
 
 ```ts
 light.backgroundColor = "#ffffff"
+light.contrastColor = "#5e5e5e"
+light.palete.neutral = "#808080" // slighty near dark for make text more clearly
+
 dark.backgroundColor = "#000000"
+dark.contrastColor = "#ffffff"
+light.palete.neutral = "#808080" // slighty near dark for make text more clearly
 ```
 
 > Switching themes only requires changing `palette` and `backgroundColor`.
@@ -198,7 +203,6 @@ Tokens can be exported as CSS variables:
   --soft-primary:  #8bbbff;
   --base-primary:  #1677ff;
   --bold-primary:  #004eff;
-  --soft-error:    #ffa6a7;
   ...
 }
 ```
