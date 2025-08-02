@@ -77,8 +77,6 @@ color = contrastColor + (contrastColor - themeColor) * (toneScale-baseScale)/(1-
 ### Theme Output Colors
 
 Auto-generated color tokens by semantic key:
-### 🎨 Bảng mã màu theo tone
-
 | Tone       | Neutral   | Primary   | Secondary | Error     | Attention | Success   | Warning   | Info      | Highlight |
 |------------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|
 | `plain`    | #ffffff   | #ffffff   | #ffffff   | #ffffff   | #ffffff   | #ffffff   | #ffffff   | #ffffff   | #ffffff   |
