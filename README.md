@@ -106,9 +106,9 @@ Text tone  = BackgroundTone ± level to ensure readibility
 
 | variants  | plain | bare | slight | gentle | subtle | base | bold | intense | extreme |
 | ------- | ----- | ---- | ------ | ------ | ------ | ---- | ---- | ------- | ------- |
-| soft    | +4    | +4   | +4     | +4     | +4     | -3   | -4   | -4      | -4      |
-| default | +5    | +5   | +5     | +5     | -3     | -4   | -5   | -5      | -5      |
-| strong  | +6    | +6   | +6     | -3     | -4     | -5   | -6   | -6      | -6      |
+| soft    | +3    | +3   | +3     | +3     | +4     | -3   | -3   | -3      | -3      |
+| default | +4    | +4   | +4     | +4     | -3     | -4   | -4   | -4      | -4      |
+| strong  | +5    | +5   | +5     | +5     | -4     | -5   | -5   | -5      | -5      |
 
 ### Border Color Tone Variants
 - Border tone  = BackgroundTone ± level smaler than contrast of text
