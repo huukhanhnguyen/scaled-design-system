@@ -110,8 +110,9 @@ Text tone  = BackgroundTone ± level to ensure readibility
 | default | +4    | +4   | +4     | +4     | -3     | -4   | -4   | -4      | -4      |
 | strong  | +5    | +5   | +5     | +5     | -4     | -5   | -5   | -5      | -5      |
 
-### Border Color Tone Variants
-- Border tone  = BackgroundTone ± level smaler than contrast of text
+### Stroke Color Tone Variants
+- Stroke tone mean that it can use for border,box shadow, outline
+- Stroke tone  = BackgroundTone ± level smaler than contrast of text
 
 | adjust  | plain | bare | gentle | subtle | soft | base | strong | bold | extreme |
 | ------- | ----- | ---- | ------ | ------ | ---- | ---- | ------ | ---- | ------- |
@@ -133,44 +134,12 @@ const textTones = {
   strong: [6, 6, 6, -3, -4, -5, -6, -6, -6],
 } as const;
 
-const borderTones = {
+const strokeTones = {
   soft: [1, 1, 1, 1, -1, -1, -1, -1, -1],
   default: [2, 2, 2, 2, -2, -2, -2, -2, -2],
   strong: [3, 3, 3, 3, -2, -3, -3, -3, -3],
 } as const;
 ```
-### Component State Colors
-
-| states | background | text    | border  | color     | description        |
-| ---------------- | ---------- | ------- | ------- | --------- | ------------------ |
-| default          | default    | default | default | theme     | Normal appearance  |
-| hover            | soft       | soft    | default | theme     | Hover effect       |
-| active           | strong     | strong  | default | theme     | Pressed state      |
-| selected         | strong     | strong  | default | primary   | Selected item      |
-| checked          | strong     | default | strong  | primary   | Checked state      |
-| readonly         | default    | soft    | soft    | neutral   | Read-only element  |
-| focus            | default    | default | strong  | primary   | Focused element    |
-| invalid          | default    | default | strong  | error     | Invalid input      |
-| disable          | soft       | soft    | soft    | neutral   | Disabled state     |
-| visited          | default    | default | default | secondary | Visited link       |
-| current          | default    | default | strong  | primary   | Active/current tab |
-
-- `current` is custom state then use with `aria-current` attributes and css, it need for distingush with `selected` form behaviour
-
-### Auto-computed State Colors
-So with  `themeColor` and `themeTone` inputs we can compute `backgroundColor` `color` `borderColor` of each states any components
-Example:
-
-```ts
-{
-  default: { backgroundColor: "--plain-primary", ... },
-  hover:   { backgroundColor: "--bare-primary", ... },
-  focus:   { borderColor: "--soft-primary", ... },
-  disabled: { backgroundColor: "--bare-neutral", ... },
-  ...
-}
-```
-> low level usage can use with direct variant of colors, each properties {color,borderColor,backgroundColor} has {default,soft,strong}  variant. Example input value must `strong`, `placeholder` must `soft` and `label` must `default`. It make slightly distingush with thout depend on font weight and bold (too strong)
 ## Multi Tone Strategy
 The tones system work like theme-in-theme mean that we can use multi tone each page. 
 Example in light theme we can use `plain` tone in main and where `popover` we can use `base` or more stronger to make dark mode. All state colors automatic compute so do not need manual adjustment for dark 'popup'
@@ -221,7 +190,7 @@ With theme namespaces:
 ### Theme Layout Input
 
 ```js
-borderRadius: {
+StrokeRadius: {
     inline: "0.2em",
     chunk: "0.4em",
     block: "0.6em",
@@ -242,7 +211,7 @@ borderRadius: {
 * All units use `em` to scale with `fontSize`
 * `padding`: padding of current box
 * `gap`: spacing between children
-* `borderRadius`: border-radius
+* `StrokeRadius`: Stroke-radius
 
 ### Box Size Definitions
 
