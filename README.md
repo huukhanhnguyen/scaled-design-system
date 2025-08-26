@@ -49,7 +49,7 @@ Most modern design systems are:
     slight: 0.2,
     gentle: 0.3,
     subtle: 0.4,
-    base: 0.5,
+    origin: 0.5,
     bold: 0.65,
     intense: 0.8,
     extreme: 1,
@@ -57,7 +57,7 @@ Most modern design systems are:
 }
 ```
 ### Tones
-- `plain → bare → slight →gentle→ subtle → base → bold→ intense→ extreme`
+- `plain → bare → slight →gentle→ subtle → origin → bold→ intense→ extreme`
 - `plain` nearly to backgroundColor
 - `extreme` nearly to contrastColor
 - index define: next = previous + 1
@@ -65,14 +65,14 @@ Most modern design systems are:
 Instead of hardcoding every color for each visual state, the Scaled Design System defines simple `palette`. Final UI colors are calculated using:
 
 ```ts
-let baseScale = toneScale.base
-// toneScale == base
+let originScale = toneScale.origin
+// toneScale == origin
 color = themeColor
-// toneScale < base
-color = backgroundColor + (themeColor - backgroundColor) * toneScale/baseScale
+// toneScale < origin
+color = backgroundColor + (themeColor - backgroundColor) * toneScale/originScale
 
-// toneScale > base
-color = contrastColor + (contrastColor - themeColor) * (toneScale-baseScale)/(1-baseScale)
+// toneScale > origin
+color = contrastColor + (contrastColor - themeColor) * (toneScale-originScale)/(1-originScale)
 ```
 ### Theme Output Colors
 
@@ -84,7 +84,7 @@ Auto-generated color tokens by semantic key:
 | `slight`   | #bfbfbf   | #a2c9ff   | #fcbddd   | #ffb8b9   | #ffc3b8   | #b7f2cc   | #fdd3b1   | #a7edf8   | #fdeba1   |
 | `gentle`   | #9e9e9e   | #73adff   | #fa9bcd   | #ff9495   | #ffa694   | #92ebb3   | #fdbe8a   | #7ae5f5   | #fce073   |
 | `subtle`   | #7e7e7e   | #4592ff   | #f97abc   | #ff7172   | #ff8871   | #6ee599   | #fca863   | #4edcf1   | #fbd644   |
-| `base`     | #5e5e5e   | #1677ff   | #f759ab   | #ff4d4f   | #ff6a4d   | #4ade80   | #fb923c   | #22d3ee   | #facc15   |
+| `origin`     | #5e5e5e   | #1677ff   | #f759ab   | #ff4d4f   | #ff6a4d   | #4ade80   | #fb923c   | #22d3ee   | #facc15   |
 | `bold`     | #424242   | #0f53b3   | #ad3e78   | #b33637   | #b34a36   | #349b5a   | #b0662a   | #1894a7   | #af8f0f   |
 | `intense`  | #262626   | #093066   | #632444   | #661f20   | #662a1f   | #1e5933   | #643a18   | #0e545f   | #645208   |
 | `extreme`  | #000000   | #000000   | #000000   | #000000   | #000000   | #000000   | #000000   | #000000   | #000000   |
@@ -94,58 +94,58 @@ Auto-generated color tokens by semantic key:
 
 ### Background Tone Variants
 
-| variants  | plain | bare | slight | gentle | subtle | base | bold | intense | extreme |
+| variants  | plain | bare | slight | gentle | subtle | origin | bold | intense | extreme |
 | ------- | ----- | ---- | ------ | ------ | ------ | ---- | ---- | ------- | ------- |
 | soft    | +1    | +1   | +1     | +1     | +1     | -1   | -1   | -1      | -1      |
-| default | 0     | 0    | 0      | 0      | 0      | 0    | 0    | 0       | 0       |
+| base | 0     | 0    | 0      | 0      | 0      | 0    | 0    | 0       | 0       |
 | strong  | +2    | +2   | +2     | +2     | +2     | -2   | -2   | -2      | -2      |
 
 - Example: `soft`at `plain` = plain   + 1 =  `bare`
 ### Text Color Tone Variants
 Text tone  = BackgroundTone ± level to ensure readibility
 
-| variants  | plain | bare | slight | gentle | subtle | base | bold | intense | extreme |
+| variants  | plain | bare | slight | gentle | subtle | origin | bold | intense | extreme |
 | ------- | ----- | ---- | ------ | ------ | ------ | ---- | ---- | ------- | ------- |
 | soft    | +3    | +3   | +3     | +3     | +4     | -3   | -3   | -3      | -3      |
-| default | +4    | +4   | +4     | +4     | -3     | -4   | -4   | -4      | -4      |
+| base | +4    | +4   | +4     | +4     | -3     | -4   | -4   | -4      | -4      |
 | strong  | +5    | +5   | +5     | +5     | -4     | -5   | -5   | -5      | -5      |
 
 ### Stroke Color Tone Variants
 - Stroke tone mean that it can use for border,box shadow, outline
 - Stroke tone  = BackgroundTone ± level smaler than contrast of text
 
-| adjust  | plain | bare | gentle | subtle | soft | base | strong | bold | extreme |
+| adjust  | plain | bare | gentle | subtle | soft | origin | strong | bold | extreme |
 | ------- | ----- | ---- | ------ | ------ | ---- | ---- | ------ | ---- | ------- |
 | soft    | +1    | +1   | +1     | +1     | -1   | -1   | -1     | -1   | -1      |
-| default | +2    | +2   | +2     | +2     | -2   | -2   | -2     | -2   | -2      |
+| base | +2    | +2   | +2     | +2     | -2   | -2   | -2     | -2   | -2      |
 | strong  | +3    | +3   | +3     | +3     | -2   | -3   | -3     | -3   | -3      |
 
 ### Color Variants in code
 ```
 const backgroundTones = {
   soft: [1, 1, -1, 1, -1, -1, -1, -1, -1],
-  default: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  base: [0, 0, 0, 0, 0, 0, 0, 0, 0],
   strong: [2, 2, 2, 2, -2, -2, -2, -2, -2],
 } as const;
 
 const textTones = {
   soft: [4, 4, 4, 4, -3, -4, -4, -4, -4, -4],
-  default: [5, 5, 5, 5, -3, -4, -5, -5, -5],
+  base: [5, 5, 5, 5, -3, -4, -5, -5, -5],
   strong: [6, 6, 6, -3, -4, -5, -6, -6, -6],
 } as const;
 
 const strokeTones = {
   soft: [1, 1, 1, 1, -1, -1, -1, -1, -1],
-  default: [2, 2, 2, 2, -2, -2, -2, -2, -2],
+  base: [2, 2, 2, 2, -2, -2, -2, -2, -2],
   strong: [3, 3, 3, 3, -2, -3, -3, -3, -3],
 } as const;
 ```
 ## Multi Tone Strategy
 The tones system work like theme-in-theme mean that we can use multi tone each page. 
-Example in light theme we can use `plain` tone in main and where `popover` we can use `base` or more stronger to make dark mode. All state colors automatic compute so do not need manual adjustment for dark 'popup'
+Example in light theme we can use `plain` tone in origin and where `popover` we can use `origin` or more stronger to make dark mode. All state colors automatic compute so do not need manual adjustment for dark 'popup'
 ## Dark Mode Strategy
 
-Dark mode uses the same tone logic with a different `backgroundColor` and modified base palette. All tones update automatically using the same formula.
+Dark mode uses the same tone logic with a different `backgroundColor` and modified origin palette. All tones update automatically using the same formula.
 
 ```ts
 light.backgroundColor = "#ffffff"
@@ -168,7 +168,7 @@ Tokens can be exported as CSS variables:
   --plain-primary: #ffffff;
   --bare-primary:  #e8f1ff;
   --soft-primary:  #8bbbff;
-  --base-primary:  #1677ff;
+  --origin-primary:  #1677ff;
   --bold-primary:  #004eff;
   ...
 }
@@ -309,7 +309,7 @@ Sizes like `sm`, `md`, `lg` define component variants. Combined with `em`-based 
 ## Use Cases
 
 * **Framework-agnostic**: Works with React, Vue, or plain HTML/CSS
-* **Accessible by default**: Tone-based contrast mapping
+* **Accessible by base**: Tone-based contrast mapping
 * **Scalable layout**: Consistent spacing on all screen sizes
 * **SSR-friendly**: Outputs CSS directly
 
