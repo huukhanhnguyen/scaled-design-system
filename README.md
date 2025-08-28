@@ -197,7 +197,7 @@ Why 1/6 lineHeight is best unit
 - lineHeight usually ~ 1.5 em => fontSize ~ 2/3 lineHeight ~ 4/6 lineHeight
 
 ```js
-lineSpan6: { // n*(lineHeight*em)/6
+lineHeight6: { // n*(lineHeight*em)/6
   span1: "0.25em",
   span2: "0.5em",
   span3: "0.75em",
@@ -210,7 +210,7 @@ lineSpan6: { // n*(lineHeight*em)/6
 * All units use `em` to scale with `fontSize`
 * Divide lineHeight to 6 spans
 * `span*` use for `padding` `borderRadius` `margin` `gap`
-* Larger use `calc(n * ${lineSpan6.span6})`
+* Larger use `calc(n * ${lineHeight6.span6})`
 * PaddingX must larger or equals paddingY
 * Border radius must equals paddingY
 * Children gap/margin must between paddingY and paddingX
@@ -221,7 +221,7 @@ lineSpan6: { // n*(lineHeight*em)/6
 | ------- | ------------------------------------------------------------------------------ |
 | `inline`  | text/checkbox/radio/icon/tag/chip/caption/badge, etc. — smallest unit , `padding`=`borderRadius`=0, `margin` `gap` = span2/span3                    |
 | `bar` | Horizontal group of inlines (e.g., Button,InputText,Select), span1/span2/span3 use for `padding` `borderRadius` `margin` `gap`  |
-| `block` | Any component larger than `bar`use span3 and `calc(n * ${lineSpan6.span6})` for `padding` `borderRadius` `margin` `gap`=> try make rounded total heigt = n*lineHeight                                           |
+| `block` | Any component larger than `bar`use span3 and `calc(n * ${lineHeight6.span6})` for `padding` `borderRadius` `margin` `gap`=> try make rounded total heigt = n*lineHeight                                           |
 
 ## Typography
 
