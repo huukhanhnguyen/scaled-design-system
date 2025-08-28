@@ -185,66 +185,43 @@ With theme namespaces:
 }
 ```
 
-## Box-level Layout
+## Line Height Based Layout 
+> Any component dimensions must relative to line height easy to make Vertical rhythm and composing components
 
-### Theme Layout Input
+### Sixth Fraction Line Height
+
+Why 1/6 lineHeight is best unit
+
+- Vertical rhythm => most important is paddingY => need minimum value 3-4px
+- fontSize usually 14px - 16px => lineHeight 21px - 24px => 1/6 ~ 3.5px - 4px
+- lineHeight usually ~ 1.5 em => fontSize ~ 2/3 lineHeight ~ 4/6 lineHeight
 
 ```js
-StrokeRadius: {
-    inline: "0.2em",
-    chunk: "0.4em",
-    block: "0.6em",
-  },
-  gap: {
-    inlineBox: "0.3em",// readonly
-    inline: "0.4em",
-    chunk: "0.6em",
-    block: "1.2em",
-  },
-  padding: {
-    inline: "0em",// readonly must be 0
-    chunk: "0.25em 0.75em",
-    block: "0.6em 0.6em",
-  }
+lineSpan6: { // n*(lineHeight*em)/6
+  span1: "0.25em",
+  span2: "0.5em",
+  span3: "0.75em",
+  span4: "1em",
+  span5: "1.25em",
+  span6: "1.5em"
+},
 ```
 
 * All units use `em` to scale with `fontSize`
-* `padding`: padding of current box
-* `gap`: spacing between children
-* `StrokeRadius`: Stroke-radius
+* Divide lineHeight to 6 spans
+* `span*` use for `padding` `borderRadius` `margin` `gap`
+* Larger use `calc(n * ${lineSpan6.span6})`
+* PaddingX must larger or equals paddingY
+* Border radius must equals paddingY
+* Children gap/margin must between paddingY and paddingX
 
-### Box Size Definitions
+### Component Types
 
-| Token   | Description                                                                    |
+| Component Types   | Description                                                                    |
 | ------- | ------------------------------------------------------------------------------ |
-| `inline`  | text/checkbox/radio/icon/tag/chip/caption/badge, etc. — smallest unit                    |
-| `bar` | Horizontal group of inlines (e.g., Button,InputText,Select,) |
-| `block` | Any component larger than `chunk`, usage nested composing blocks                                                 |
-
->After block, the system imposes no further layout rules.
-Page-level composition such as columns, sections, margins, or responsive grid behavior are intentionally left unconstrained, allowing complete design flexibility without system interference.
-
-### Visual Box
-```
-            InpuText Bar            Button Bar
-        +------------------------+  +-------------------+
-Block   | prefix | input | suffix|  |  icon   |   text  |
-        +------------------------+  +-------------------+
-```
-```
-+----------------------------------------------+
-|                  Block                       |
-|  +----------------------------------------+  |
-|  |                Block                   |  |
-|  +----------------------------------------+  |
-|  +----------------------------------------+  |
-|  |                Block                   |  |
-|  +----------------------------------------+  |
-|  +----------------------------------------+  |
-|  |                Block                   |  |
-|  +----------------------------------------+  |
-+----------------------------------------------+
-```
+| `inline`  | text/checkbox/radio/icon/tag/chip/caption/badge, etc. — smallest unit , `padding`=`borderRadius`=0, `margin` `gap` = span2/span3                    |
+| `bar` | Horizontal group of inlines (e.g., Button,InputText,Select), span1/span2/span3 use for `padding` `borderRadius` `margin` `gap`  |
+| `block` | Any component larger than `bar`use span3 and `calc(n * ${lineSpan6.span6})` for `padding` `borderRadius` `margin` `gap`=> try make rounded total heigt = n*lineHeight                                           |
 
 ## Typography
 
@@ -252,38 +229,38 @@ Block   | prefix | input | suffix|  |  icon   |   text  |
 
 ```js
 fontSize: {
-  h6: "1.1rem",
-  h5: "1.2rem",
-  h4: "1.3rem",
-  h3: "1.5rem",
-  h2: "1.75rem",
-  h1: "2rem",
-  sm: "0.85rem",
-  md: "1rem",
-  lg: "1.1rem",
-},
-lineHeight: {
-  h6: 1.2,
-  h5: 1.3,
-  h4: 1.5,
-  h3: 1.75,
-  h2: 2,
-  h1: 2.5,
-  sm: 1.1,
-  md: 1.4,
-  lg: 1.6,
-},
-fontWeight: {
-  h6: 500,
-  h5: 500,
-  h4: 500,
-  h3: 700,
-  h2: 700,
-  h1: 700,
-  sm: 500,
-  md: 500,
-  lg: 500,
-},
+        h6: "1.3rem",
+        h5: "1.4rem",
+        h4: "1.5rem",
+        h3: "1.6rem",
+        h2: "1.7rem",
+        h1: "1.8rem",
+        sm: "0.8rem",
+        md: "1rem",
+        lg: "1.2rem",
+    },
+    lineHeight: {
+        h6: 1.6,
+        h5: 1.5,
+        h4: 1.4,
+        h3: 1.3,
+        h2: 1.2,
+        h1: 1.1,
+        sm: 1.5,
+        md: 1.5,
+        lg: 1.5,
+    },
+    fontWeight: {
+        h1: 700,
+        h2: 700,
+        h3: 700,
+        h4: 600,
+        h5: 600,
+        h6: 500,
+        sm: 400,
+        md: 400,
+        lg: 400,
+    },
 fontFamily: {
   heading: '"Roboto", "Arial", sans-serif',
   text: '"Roboto","Inter", "Helvetica Neue", sans-serif',
