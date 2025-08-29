@@ -197,20 +197,20 @@ Why 1/6 lineHeight is best unit
 - lineHeight usually ~ 1.5 em => fontSize ~ 2/3 lineHeight ~ 4/6 lineHeight
 
 ```js
-lineHeight6: { // n*(lineHeight*em)/6
-  span1: "0.25em",
-  span2: "0.5em",
-  span3: "0.75em",
-  span4: "1em",
-  span5: "1.25em",
-  span6: "1.5em"
+lineStep6: { // n*(lineHeight*em)/6
+  step1: "0.25em",
+  step2: "0.5em",
+  step3: "0.75em",
+  step4: "1em",
+  step5: "1.25em",
+  step6: "1.5em"
 },
 ```
 
 * All units use `em` to scale with `fontSize`
 * Divide lineHeight to 6 spans
 * `span*` use for `padding` `borderRadius` `margin` `gap`
-* Larger use `calc(n * ${lineHeight6.span6})`
+* Larger use `calc(n * ${lineStep6.step6})`
 * PaddingX must larger or equals paddingY
 * Border radius must equals paddingY
 * Children gap/margin must between paddingY and paddingX
@@ -219,9 +219,9 @@ lineHeight6: { // n*(lineHeight*em)/6
 
 | Component Types   | Description                                                                    |
 | ------- | ------------------------------------------------------------------------------ |
-| `inline`  | text/checkbox/radio/icon/tag/chip/caption/badge, etc. — smallest unit , `padding`=`borderRadius`=0, `margin` `gap` = span2/span3                    |
-| `bar` | Horizontal group of inlines (e.g., Button,InputText,Select), span1/span2/span3 use for `padding` `borderRadius` `margin` `gap`  |
-| `block` | Any component larger than `bar`use span3 and `calc(n * ${lineHeight6.span6})` for `padding` `borderRadius` `margin` `gap`=> try make rounded total heigt = n*lineHeight                                           |
+| `inline`  | text/checkbox/radio/icon/tag/chip/caption/badge, etc. — smallest unit , `padding`=`borderRadius`=0, `margin` `gap` = step2/step3                    |
+| `bar` | Horizontal group of inlines (e.g., Button,InputText,Select), step1/step2/step3 use for `padding` `borderRadius` `margin` `gap`  |
+| `block` | Any component larger than `bar`use step3 and `calc(n * ${lineStep6.step6})` for `padding` `borderRadius` `margin` `gap`=> try make rounded total heigt = n*lineHeight                                           |
 
 ## Typography
 
