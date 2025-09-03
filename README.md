@@ -22,7 +22,7 @@ Most modern design systems are:
 
 * **Tone-based color interpolation** instead of using many preset colors
 * **Automatic accessibility for states and interactions** based on visual tone mapping
-* **Box-level sizing based on font-size**, simulating how the brain groups elements visually
+* **Sixth line height fraction for spacing (margin,padding,radius,gap)
 
 ## Tone-based Color Scaling
 
@@ -111,7 +111,7 @@ Text tone  = BackgroundTone ± level to ensure readibility
 | strong  | +5    | +5   | +5     | +5     | -4     | -5   | -5   | -5      | -5      |
 
 ### Stroke Color Tone Variants
-- Stroke tone mean that it can use for border,box shadow, outline
+- Stroke tone mean that it can use for `border shadow, outline`
 - Stroke tone  = BackgroundTone ± level smaler than contrast of text
 
 | adjust  | plain | bare | gentle | subtle | soft | origin | strong | bold | extreme |
@@ -197,20 +197,20 @@ Why 1/6 lineHeight is best unit
 - lineHeight usually ~ 1.5 em => fontSize ~ 2/3 lineHeight ~ 4/6 lineHeight
 
 ```js
-lineStep6: { // n*(lineHeight*em)/6
-  step1: "0.25em",
-  step2: "0.5em",
-  step3: "0.75em",
-  step4: "1em",
-  step5: "1.25em",
-  step6: "1.5em"
+lineHeight6: { // n*(lineHeight*em)/6
+  span1: "0.25em",
+  span2: "0.5em",
+  span3: "0.75em",
+  span4: "1em",
+  span5: "1.25em",
+  span6: "1.5em"
 },
 ```
 
 * All units use `em` to scale with `fontSize`
 * Divide lineHeight to 6 spans
 * `span*` use for `padding` `borderRadius` `margin` `gap`
-* Larger use `calc(n * ${lineStep6.step6})`
+* Larger use `calc(n * ${lineHeight6.span6})`
 * PaddingX must larger or equals paddingY
 * Border radius must equals paddingY
 * Children gap/margin must between paddingY and paddingX
@@ -219,9 +219,9 @@ lineStep6: { // n*(lineHeight*em)/6
 
 | Component Types   | Description                                                                    |
 | ------- | ------------------------------------------------------------------------------ |
-| `inline`  | text/checkbox/radio/icon/tag/chip/caption/badge, etc. — smallest unit , `padding`=`borderRadius`=0, `margin` `gap` = step2/step3                    |
-| `bar` | Horizontal group of inlines (e.g., Button,InputText,Select), step1/step2/step3 use for `padding` `borderRadius` `margin` `gap`  |
-| `block` | Any component larger than `bar`use step3 and `calc(n * ${lineStep6.step6})` for `padding` `borderRadius` `margin` `gap`=> try make rounded total heigt = n*lineHeight                                           |
+| `inline`  | text/checkbox/radio/icon/tag/chip/caption/badge, etc. — smallest unit , `padding`=`borderRadius`=0, `margin` `gap` = span2/span3                    |
+| `bar` | Horizontal group of inlines (e.g., Button,InputText,Select), span1/span2/span3 use for `padding` `borderRadius` `margin` `gap`  |
+| `block` | Any component larger than `bar`use span3 and `calc(n * ${lineHeight6.span6})` for `padding` `borderRadius` `margin` `gap`=> try make rounded total heigt = n*lineHeight                                           |
 
 ## Typography
 
@@ -282,6 +282,27 @@ Sizes like `sm`, `md`, `lg` define component variants. Combined with `em`-based 
   ...
 }
 ```
+## Usage Workflow 
+### Work flow
+* Each element define `theme={color,tone,size}`
+* `{color,tone,size}` each can be specific value or "inherit"|"increase"|"descrease"|"inverse"
+* Traverse up tree to resolve inherit value `{color,tone,size}`
+* Decompose tone to tone variants `{text,background,stroke}` * `{base,soft,strong}`
+* With a color and tone variants => Make diference states `{hover,selected,focus e.g...}
+### State Examples
+* Normal state use tone variant `base` for all `color` `backgroundColor` `border`
+* `disabled` state use tone variant `soft` for all `color` `backgroundColor` `border`
+* `hover` can slighty change background by use tone variant `soft`
+* `focus` can change border/outline/shadow by use tone variant of `stroke` with `strong` with `primary` color
+* `selected` can slighty change background by use tone variant `soft` with `primary` color
+* Mean that any state can make it diference by change tone variant of  `{color,backgroundColor,border,shadow,outline}`
+
+### Inherit Examples
+* Top level element has `theme={color:"neutral",tone:"plain",size:"md"}` => in light theme has white background and dark theme has black background
+* if any deep child has `theme={color:"inherit",tone:"increase",size:"inherit"}` => background slightly change to "bare" (light gray in light theme and dark gray in dark theme ). Usually use in code/chip/tag element 
+* if any deep child has `theme={color:"inherit",tone:"inverse",size:"inherit"}` => background inverse change to "base" (dark gray in light theme and light gray in dark theme ). Usually use tooltip/popover => it's children has `inherit` still has `inverse` tone. 
+* Mean that any component can reuse cross light/dark theme and reuse cross parent tone. Example a menu component auto change color in light/dark theme and auto change color in popover (auto inverse)
+ 
 
 ## Use Cases
 
