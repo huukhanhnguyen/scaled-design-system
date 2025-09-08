@@ -102,6 +102,8 @@ This for solving : If any component has `color` and `tone` => Automatic define a
 
 ### Shift Tones
 
+This help in any tone and how state change the `contrast` in automatic controled
+
 | level/tone | plain | bare | slight | subtle | base | origin | intense | extreme | variants                     |
 |------------|-------|------|--------|--------|------|------|---------|---------|-------------------------------|
 | level0     | 0     | 0    | 0      | 0      | 0    | 0    | 0       | 0       | background-base               |
