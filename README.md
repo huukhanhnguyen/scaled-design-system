@@ -82,7 +82,6 @@ Auto-generated color tokens by semantic key:
 | `plain`    | #ffffff   | #ffffff   | #ffffff   | #ffffff   | #ffffff   | #ffffff   | #ffffff   | #ffffff   | #ffffff   |
 | `bare`     | #dfdfdf   | #d0e4ff   | #fddeee   | #ffdbdc   | #ffe1db   | #dbf8e6   | #fee9d8   | #d3f6fc   | #fef5d0   |
 | `slight`   | #bfbfbf   | #a2c9ff   | #fcbddd   | #ffb8b9   | #ffc3b8   | #b7f2cc   | #fdd3b1   | #a7edf8   | #fdeba1   |
-| `gentle`   | #9e9e9e   | #73adff   | #fa9bcd   | #ff9495   | #ffa694   | #92ebb3   | #fdbe8a   | #7ae5f5   | #fce073   |
 | `subtle`   | #7e7e7e   | #4592ff   | #f97abc   | #ff7172   | #ff8871   | #6ee599   | #fca863   | #4edcf1   | #fbd644   |
 | `origin`     | #5e5e5e   | #1677ff   | #f759ab   | #ff4d4f   | #ff6a4d   | #4ade80   | #fb923c   | #22d3ee   | #facc15   |
 | `bold`     | #424242   | #0f53b3   | #ad3e78   | #b33637   | #b34a36   | #349b5a   | #b0662a   | #1894a7   | #af8f0f   |
@@ -113,19 +112,18 @@ This for solving : If any component has `color` and `tone` => Automatic define a
 | level5     | +5    | +5   | +5     | +4     | -4   | -5   | -5      | -5      | text-strong                   |
 
 Example result of shift tones 
-|level0-nochange       | plain  | bare   | slight | subtle | base   | bold   | intense | extreme |
+|level0-nochange       | plain  | bare   | slight | subtle | origin   | bold   | intense | extreme |
 |--------------|--------|--------|--------|--------|--------|--------|---------|---------|
 | level1-number| 1      | 1      | 1      | 1      | -1     | -1     | -1      | -1      |
-| level1-name  | bare   | slight | subtle | base   | subtle | base   | bold    | intense |
+| level1-name  | bare   | slight | subtle | origin   | subtle | origin   | bold    | intense |
 | level2-number| 2      | 2      | 2      | 2      | -2     | -2     | -2      | -2      |
-| level2-name  | slight | subtle | base   | bold   | slight | subtle | base    | bold    |
+| level2-name  | slight | subtle | origin   | bold   | slight | subtle | origin    | bold    |
 >Similar shift tone for other levels
 
 Explains:
 * tone `bare` at `level2` = `bare` +2 = `subtle` (Move forward 2 step)
-* tone `origin` at `level4` = `origin` -4 = `plain` (Move backward 4 step)
 * Max 5 levels to ensure `text-base` = `background` +4 , `text-strong` = `background` +5  in any tones and not out of tones
-* `plain` is most use with has `background` (white in light them / black in darktheme) will has text at `orgin` with user input for easy control
+* `plain` is most use with has `background` (white in light them / black in darktheme) will has text at `orgin` which user input for easy control
 
 ### Tone Role Variants
 
@@ -136,28 +134,29 @@ Explains:
 | stroke     | level2  | level1  | level3  |
 
 Example result of background tone variants 
-|base       | plain  | bare   | slight | subtle | base   | bold   | intense | extreme |
+|base       | plain  | bare   | slight | subtle | origin   | bold   | intense | extreme |
 |--------------|--------|--------|--------|--------|--------|--------|---------|---------|
-| soft  | bare   | slight | subtle | base   | subtle | base   | bold    | intense |
-| strong  | slight | subtle | base   | bold   | slight | subtle | base    | bold    |
+| soft  | bare   | slight | subtle | origin   | subtle | origin   | bold    | intense |
+| strong  | slight | subtle | origin   | bold   | slight | subtle | origin    | bold    |
 >Similar tone variants for `text` and `stroke`
 
 Priciples: 
 * `soft` = `base` ±1 
 * `strong` = `base` ±1 
 * `base` use for `normal` states `text`= `background` ± 4, `stroke` = `background` ± 2
-
-Explains:
-* `background` has `{base:level0,soft:level1,strong:level2}`
-* tone `bare` of `background` has `{base:bare,soft:slight,strong:subtle}`
 * With `toneScale`,`color` and `tone` => colors of `{text,background,stroke}` in variants `{base,soft,strong}`
 
-Usage:
+>{tone,toneVariant,themeColor}  → {otherTone,themeColor} => color result
 
-* On normal state use {tone:`base`,color:`neutral`} for `{text,background,stroke}`
-* On `hover` often use `background` at `soft`
-* On `disabled` often use `{text,background,stroke}` all at `soft`
-* On `focus` often use `stroke` at `strong` and with `primary` color
+Examples:
+
+Below example work on any tone `plain`...→`origin`...→`extreme`
+
+* On normal state use {toneVariant:`base`,color:`neutral`} for `{text,background,stroke}`
+* On `hover` often change `background` to `soft`
+* On `disabled` often change `{text,background,stroke}` all to `soft`
+* On `focus` often change `stroke` to `strong` with `primary` color
+* Link control `text` => `normal`:{toneVariant:`base`,color:`primary`} , `hover`:{toneVariant:`soft`,color:`primary`},`visited`:{toneVariant:`base`,color:`secondary`}
 
 ## Multi Tone Strategy
 The tones system work like theme-in-theme mean that we can use multi tone each page. 
@@ -186,7 +185,7 @@ Tokens can be exported as CSS variables:
 :root {
   --plain-primary: #ffffff;
   --bare-primary:  #e8f1ff;
-  --soft-primary:  #8bbbff;
+  --slight-primary:  #8bbbff;
   --origin-primary:  #1677ff;
   --bold-primary:  #004eff;
   ...
