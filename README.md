@@ -104,7 +104,7 @@ This for solving : If any component has `color` and `tone` => Automatic define a
 
 This help in any tone and how state change the `contrast` in automatic controled
 
-| level/tone | plain | bare | slight | subtle | base | origin | intense | extreme | variants                     |
+| level/tone | plain | bare | slight | subtle | origin | bold | intense | extreme | variants                     |
 |------------|-------|------|--------|--------|------|------|---------|---------|-------------------------------|
 | level0     | 0     | 0    | 0      | 0      | 0    | 0    | 0       | 0       | background-base               |
 | level1     | +1    | +1   | +1     | +1     | -1   | -1   | -1      | -1      | background-soft / stroke-soft |
