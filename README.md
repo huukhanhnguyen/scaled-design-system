@@ -28,156 +28,143 @@ Most modern design systems are:
 
 ### Theme Input Colors
 
+LightTheme
+
 ```js
 {
   palette: {
-    neutral: "#5e5e5e",
-    primary: "#1677FF",
-    secondary: "#f759ab",
-    error: "#ff4d4f",
-    attention: "#ff6a4d",
-    success: "#4ade80",
-    warning: "#fb923c",
-    info: "#22d3ee",
-    highlight: "#facc15",
-  },
-  backgroundColor: "#ffffff",
-  contrastColor: "#000000",
-  toneScale: {
-    plain: 0,
-    bare: 0.1,
-    slight: 0.2,
-    gentle: 0.3,
-    subtle: 0.4,
-    origin: 0.5,
-    bold: 0.65,
-    intense: 0.8,
-    extreme: 1,
-  }
+        neutral: "#7f7a7f",
+        surface: "#a8a8a8",
+        primary: "#1677FF",
+        secondary: "#f759ab",
+        error: "#ff4d4f",
+        attention: "#ff6a4d",
+        success: "#1bab50",
+        warning: "#fb923c",
+        info: "#22d3ee",
+        highlight: "#ffcc00",
+    },
+    backgroundColor: "#ffffff",
+    contrastColor: "#000000",
+    toneScale: {
+        plain: 0, // white
+        bare: 0.05,
+        slight: 0.125,
+        subtle: 0.225,
+        soft: 0.35,
+        base: 0.5,
+        sharp: 0.55,
+        strong: 0.625,
+        bold: 0.725,
+        intense: 0.85,
+        extreme: 1, // black
+    },
 }
 ```
+Darktheme inherit LightTheme and update
+
+```js
+{
+    backgroundColor: "#000000",
+    contrastColor: "#ffffff",
+    toneScale: {
+        plain: 0, // black
+        bare: 0.15,
+        slight: 0.275,
+        subtle: 0.375,
+        soft: 0.45,
+        base: 0.5,
+        sharp: 0.65,
+        strong: 0.775,
+        bold: 0.875,
+        intense: 0.95,
+        extreme: 1, // white
+    }
+}
+
+```
+
 ### Tones
-- `plain → bare → slight →gentle→ subtle → origin → bold→ intense→ extreme`
+- `plain → bare → slight → subtle → soft → base → sharp → strong → bold→ intense→ extreme`
 - `plain` nearly to backgroundColor
 - `extreme` nearly to contrastColor
-- index define: next = previous + 1
+
+> Why 11 color scales ? Excludes (plain/extreme) => 9 real color scales. Reference `Chakra` and some ui lib has arround 11 color scale but them has not perceptual visual difference for human eyes => 9 real color scales best fit
+
+> Delta of scale increase when color darker for clearer perceptual contrast difference
+
 ### Color Formula
 Instead of hardcoding every color for each visual state, the Scaled Design System defines simple `palette`. Final UI colors are calculated using:
 
+> number of colors = palette * toneScale
+
 ```ts
-let originScale = toneScale.origin
-// toneScale == origin
+let scale = toneScale.base
 color = themeColor
-// toneScale < origin
-color = backgroundColor + (themeColor - backgroundColor) * toneScale/originScale
+// toneScale < scale
+color = backgroundColor + (themeColor - backgroundColor) * toneScale/scale
 
-// toneScale > origin
-color = contrastColor + (contrastColor - themeColor) * (toneScale-originScale)/(1-originScale)
-```
-### Theme Output Colors
-
-Auto-generated color tokens by semantic key:
-| Tone       | Neutral   | Primary   | Secondary | Error     | Attention | Success   | Warning   | Info      | Highlight |
-|------------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|
-| `plain`    | #ffffff   | #ffffff   | #ffffff   | #ffffff   | #ffffff   | #ffffff   | #ffffff   | #ffffff   | #ffffff   |
-| `bare`     | #dfdfdf   | #d0e4ff   | #fddeee   | #ffdbdc   | #ffe1db   | #dbf8e6   | #fee9d8   | #d3f6fc   | #fef5d0   |
-| `slight`   | #bfbfbf   | #a2c9ff   | #fcbddd   | #ffb8b9   | #ffc3b8   | #b7f2cc   | #fdd3b1   | #a7edf8   | #fdeba1   |
-| `subtle`   | #7e7e7e   | #4592ff   | #f97abc   | #ff7172   | #ff8871   | #6ee599   | #fca863   | #4edcf1   | #fbd644   |
-| `origin`     | #5e5e5e   | #1677ff   | #f759ab   | #ff4d4f   | #ff6a4d   | #4ade80   | #fb923c   | #22d3ee   | #facc15   |
-| `bold`     | #424242   | #0f53b3   | #ad3e78   | #b33637   | #b34a36   | #349b5a   | #b0662a   | #1894a7   | #af8f0f   |
-| `intense`  | #262626   | #093066   | #632444   | #661f20   | #662a1f   | #1e5933   | #643a18   | #0e545f   | #645208   |
-| `extreme`  | #000000   | #000000   | #000000   | #000000   | #000000   | #000000   | #000000   | #000000   | #000000   |
-
-- Output colors in format theme[tone][color]
-
-## Tone Role Variant
-This for solving : If any component has `color` and `tone` => Automatic define all states `normal` `hover` `focus` `selected` `disable` `readonly` e.g...
-
-### Concept
-* By changing tone and color of `text` or `background` or `stroke` (border,outline or shadow) => Define all states
-* `{text,background,stroke}` need variants to change `{base,soft,strong}`
-* In `normal` or any states on any tones required contrast => Shift tones table 
-
-> `{text,background,stroke}` * `{base,soft,strong}` * (number of colors) => describe all of states of any component
-
-### Shift Tones
-
-This help in any tone and how state change the `contrast` in automatic controled
-
-| level/tone | plain | bare | slight | subtle | origin | bold | intense | extreme | variants                     |
-|------------|-------|------|--------|--------|------|------|---------|---------|-------------------------------|
-| level0     | 0     | 0    | 0      | 0      | 0    | 0    | 0       | 0       | background-base               |
-| level1     | +1    | +1   | +1     | +1     | -1   | -1   | -1      | -1      | background-soft / stroke-soft |
-| level2     | +2    | +2   | +2     | +2     | -2   | -2   | -2      | -2      | background-strong / stroke-base |
-| level3     | +3    | +3   | +3     | +2     | -2   | -2   | -3      | -3      | text-soft / stroke-strong     |
-| level4     | +4    | +4   | +4     | +3     | -3   | -4   | -4      | -4      | text-base                     |
-| level5     | +5    | +5   | +5     | +4     | -4   | -5   | -5      | -5      | text-strong                   |
-
-Example result of shift tones 
-|level0-nochange       | plain  | bare   | slight | subtle | origin   | bold   | intense | extreme |
-|--------------|--------|--------|--------|--------|--------|--------|---------|---------|
-| level1-number| 1      | 1      | 1      | 1      | -1     | -1     | -1      | -1      |
-| level1-name  | bare   | slight | subtle | origin   | subtle | origin   | bold    | intense |
-| level2-number| 2      | 2      | 2      | 2      | -2     | -2     | -2      | -2      |
-| level2-name  | slight | subtle | origin   | bold   | slight | subtle | origin    | bold    |
->Similar shift tone for other levels
-
-Explains:
-* tone `bare` at `level2` = `bare` +2 = `subtle` (Move forward 2 step)
-* Max 5 levels to ensure `text-base` = `background` +4 , `text-strong` = `background` +5  in any tones and not out of tones
-* `plain` is most use with has `background` (white in light them / black in darktheme) will has text at `orgin` which user input for easy control
-
-### Tone Role Variants
-
-| role/variant    | base    | soft    | strong   |
-|------------|---------|---------|---------|
-| background | level0  | level1  | level2  |
-| text       | level4  | level3  | level5  |
-| stroke     | level2  | level1  | level3  |
-
-Example result of background tone variants 
-|base       | plain  | bare   | slight | subtle | origin   | bold   | intense | extreme |
-|--------------|--------|--------|--------|--------|--------|--------|---------|---------|
-| soft  | bare   | slight | subtle | origin   | subtle | origin   | bold    | intense |
-| strong  | slight | subtle | origin   | bold   | slight | subtle | origin    | bold    |
->Similar tone variants for `text` and `stroke`
-
-Priciples: 
-* `soft` = `base` ±1 
-* `strong` = `base` ±1 
-* `base` use for `normal` states `text`= `background` ± 4, `stroke` = `background` ± 2
-* With `toneScale`,`color` and `tone` => colors of `{text,background,stroke}` in variants `{base,soft,strong}`
-
->{tone,toneVariant,themeColor}  → {otherTone,themeColor} => color result
-
-Examples:
-
-Below example work on any tone `plain`...→`origin`...→`extreme`
-
-* On normal state use {toneVariant:`base`,color:`neutral`} for `{text,background,stroke}`
-* On `hover` often change `background` to `soft`
-* On `disabled` often change `{text,background,stroke}` all to `soft`
-* On `focus` often change `stroke` to `strong` with `primary` color
-* Link control `text` => `normal`:{toneVariant:`base`,color:`primary`} , `hover`:{toneVariant:`soft`,color:`primary`},`visited`:{toneVariant:`base`,color:`secondary`}
-
-## Multi Tone Strategy
-The tones system work like theme-in-theme mean that we can use multi tone each page. 
-Example in light theme we can use `plain` tone in origin and where `popover` we can use `origin` or more stronger to make dark mode. All state colors automatic compute so do not need manual adjustment for dark 'popup'
-## Dark Mode Strategy
-
-Dark mode uses the same tone logic with a different `backgroundColor` and modified origin palette. All tones update automatically using the same formula.
-
-```ts
-light.backgroundColor = "#ffffff"
-light.contrastColor = "#5e5e5e"
-light.palete.neutral = "#808080" // slighty near dark for make text more clearly
-
-dark.backgroundColor = "#000000"
-dark.contrastColor = "#ffffff"
-light.palete.neutral = "#808080" // slighty near dark for make text more clearly
+// toneScale > scale
+color = contrastColor + (contrastColor - themeColor) * (toneScale-scale)/(1-scale)
 ```
 
-> Switching themes only requires changing `palette` and `backgroundColor`.
+### Balance Tone Function
+
+- At middle tone scale `base` (input color) => has 2 side of scales
+- At start side shift forward and end side shift backward
+- Instead turn direction at middle (index 6) => turn early at (index 5) => expected human likely on filled area text must same color outer area. Example button with color primary(or any) at tone basefilled as input color => text ±6 backforward to `plain` (same as background) instead forward `extreme` (black)
+
+- Ending ensure clamp tone 
+
+1. Instead move forware and invert at middle (index 6) => early invert at  
+- Auto clamp when out of range
+```js
+
+export function balanceTone(tone, level) {
+    const ThemeTones = ["plain","bare","slight","subtle","soft","base","sharp","strong","bold","intense","extreme"] 
+    const index = ThemeTones.findIndex((e) => e === tone);
+    if (index === -1) return tone;
+    // invert point at index 5 ensure text nearly background like human expected
+    let newIndex = index <= 5 ? index + level : index - level
+    newIndex = newIndex < 0 || newIndex > ThemeTones.length - 1 ? - newIndex : newIndex
+    newIndex = Math.max(0, Math.min(ThemeTones.length - 1, newIndex));
+    return ThemeTones[newIndex];
+}
+```
+
+### Self Tone Shift
+The concept is that any element has `theme:{color,tone}` and default them are `inherit`. `theme.tone` mean that it self `background tone` when default state. Any `color` still work fine and we only care about `tone`.
+
+- text tone= background ±6 
+- subtext= background ±5
+- emphasizedText= background ±7
+- border/outline/boxShadow = background ±3
+- hoverBackground = background ±1
+- disabledBackground = background ±1
+- disabledText = disabledBackground ±3 (reduce contrast)
+- selectedBackground = background ±1 and change color 
+- or selectedBackground = background ±1 or any change color 
+
+> No need use `fontWeigth` (too contrast) for multiple semantic text, color tone more subtle
+
+>By changing color and tone of `backgroundColor` `text` `border/outline/boxShadow` => apply any states
+
+### Inherit Tone Shift
+
+This for solving highlight children. Their tone must shift base on parent, it self tone auto change by above principles
+
+>highlightTone = parentTone ±n (n >1 ensure parent hover or selected still see difference)
+
+Examples: 
+
+- tooltip/popover/badge tone = parentTone ±6
+- code/tag/chip/switch tone = parentTone ±2
+
+### Special Tone Case
+
+Palette `neutral` with 11 tones use for almost of elements. But in some case need slightly tone and it might out of tone range. Example `pre` has larg area neend too low contrast  => Use other gray color, above palette has `surfure` it lower than `neutral`
+
+> Out of tone range make other color 
 
 ## Color Token Export Format
 
@@ -188,7 +175,7 @@ Tokens can be exported as CSS variables:
   --plain-primary: #ffffff;
   --bare-primary:  #e8f1ff;
   --slight-primary:  #8bbbff;
-  --origin-primary:  #1677ff;
+  --base-primary:  #1677ff;
   --bold-primary:  #004eff;
   ...
 }
@@ -303,26 +290,12 @@ Sizes like `sm`, `md`, `lg` define component variants. Combined with `em`-based 
 }
 ```
 ## Usage Workflow 
-### Work flow
-* Each element define `theme={color,tone,size}`
-* `{color,tone,size}` each can be specific value or "inherit"|"increase"|"descrease"|"inverse"
-* Traverse up tree to resolve inherit value `{color,tone,size}`
-* Decompose tone to tone variants `{text,background,stroke}` * `{base,soft,strong}`
-* With a color and tone variants => Make diference states `{hover,selected,focus e.g...}
-### State Examples
-* Normal state use tone variant `base` for all `color` `backgroundColor` `border`
-* `disabled` state use tone variant `soft` for all `color` `backgroundColor` `border`
-* `hover` can slighty change background by use tone variant `soft`
-* `focus` can change border/outline/shadow by use tone variant of `stroke` with `strong` with `primary` color
-* `selected` can slighty change background by use tone variant `soft` with `primary` color
-* Mean that any state can make it diference by change tone variant of  `{color,backgroundColor,border,shadow,outline}`
 
-### Inherit Examples
-* Top level element has `theme={color:"neutral",tone:"plain",size:"md"}` => in light theme has white background and dark theme has black background
-* if any deep child has `theme={color:"inherit",tone:"increase",size:"inherit"}` => background slightly change to "bare" (light gray in light theme and dark gray in dark theme ). Usually use in code/chip/tag element 
-* if any deep child has `theme={color:"inherit",tone:"inverse",size:"inherit"}` => background inverse change to "base" (dark gray in light theme and light gray in dark theme ). Usually use tooltip/popover => it's children has `inherit` still has `inverse` tone. 
-* Mean that any component can reuse cross light/dark theme and reuse cross parent tone. Example a menu component auto change color in light/dark theme and auto change color in popover (auto inverse)
- 
+* Each element define `theme={color,tone,size}`
+* `{color,tone,size}` each can be specific value or "inherit"|"increase-{n}"|"descrease-{n}"|"balance-{n}"
+* Traverse up tree to resolve inherit value `{color,tone,size}`
+* Still dynamic tone by `balanceTone` + color => result color apply for each css properties
+* With size apply fontSize,lineHeight,margin,padding,gap
 
 ## Use Cases
 
