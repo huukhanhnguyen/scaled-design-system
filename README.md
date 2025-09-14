@@ -167,30 +167,16 @@ Palette `neutral` with 11 tones use for almost of elements. But in some case nee
 > Out of tone range make other color 
 
 ## Color Token Export Format
-
-Tokens can be exported as CSS variables:
-
+Value of element should use css variables like element.style.color = var(--bare-primary) Container set attributes "data-theme="light" or data-theme="dark" => auto change color of element where use css variable
 ```css
-:root {
-  --plain-primary: #ffffff;
-  --bare-primary:  #e8f1ff;
-  --slight-primary:  #8bbbff;
-  --base-primary:  #1677ff;
-  --bold-primary:  #004eff;
-  ...
+:[data-theme="light"] {
+  --bare-primary: #d1e4ff; //near white
+}
+:[data-theme="dark"] {
+  --soft-primary: #02204d; // near dark
 }
 ```
-
-With theme namespaces:
-
-```css
-:root[data-theme="light"] {
-  --plain-primary: #ffffff;
-}
-:root[data-theme="dark"] {
-  --plain-primary: #0d1117;
-}
-```
+> Edge case why use same color in multiple theme => use direct token like "#d1e4ff"
 
 ## Line Height Based Layout 
 > Any component dimensions must relative to line height easy to make Vertical rhythm and composing components
