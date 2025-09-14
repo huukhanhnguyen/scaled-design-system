@@ -199,21 +199,37 @@ With theme namespaces:
 
 Why 1/6 lineHeight is best unit
 
-- Vertical rhythm => most important is paddingY => need minimum value 3-4px
+- Vertical rhythm => most important is paddingY => need small value 3-4px
 - fontSize usually 14px - 16px => lineHeight 21px - 24px => 1/6 ~ 3.5px - 4px
 - lineHeight usually ~ 1.5 em => fontSize ~ 2/3 lineHeight ~ 4/6 lineHeight
-
+- minimum "1/12": "0.125em" ~2px => border/offset 
 ```js
-lineHeight6: { // n*(lineHeight*em)/6
-  span1: "0.25em",
-  span2: "0.5em",
-  span3: "0.75em",
-  span4: "1em",
-  span5: "1.25em",
-  span6: "1.5em"
-},
+    lineStep: { //n*lineHeight(1.5em)
+        "1/12": "0.125em",
+        "1/6": "0.25em",
+        "2/6": "0.5em",
+        "3/6": "0.75em",
+        "4/6": "1em",
+        "5/6": "1.25em",
+        "6/6": "1.5em",
+        "9/6": "2.25em",
+        "12/6": "3em",
+        "18/6": "4.5em",
+        "24/6": "6em",
+        "30/6": "7.5em",
+        "36/6": "9em",
+        "42/6": "10.5em",
+        "48/6": "12em",
+        "54/6": "13.5em",
+        "60/6": "15em",
+    },
 ```
-
+CSS Variables
+```css
+--lineStep-1_12: 0.125em;
+--lineStep-1_6: 0.25em;
+--lineStep-2_6: 0.5em;
+```
 * All units use `em` to scale with `fontSize`
 * Divide lineHeight to 6 spans
 * `span*` use for `padding` `borderRadius` `margin` `gap`
