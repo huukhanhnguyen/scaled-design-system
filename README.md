@@ -102,6 +102,48 @@ color = backgroundColor + (themeColor - backgroundColor) * toneScale/scale
 // toneScale > scale
 color = contrastColor + (contrastColor - themeColor) * (toneScale-scale)/(1-scale)
 ```
+### Tone Shift
+Example code for tone shift 
+```js
+
+const ThemeTones = [...Array(10).keys()]
+
+export function shiftTone(tone, level) {
+    const index = ThemeTones.findIndex((e) => e === tone);
+    if (index === -1) return tone;
+    let newIndex = index + level;
+    newIndex = Math.max(0, Math.min(ThemeTones.length - 1, newIndex));
+    return ThemeTones[newIndex];
+}
+
+//Find better direction `forward` or `backward` => median
+
+export function balanceTone(tone, level) {
+    const index = ThemeTones.findIndex((e) => e === tone);
+    if (index === -1) return tone;
+    let newIndex = index <= 5 ? index + level : index - level;
+    newIndex = newIndex < 0 || newIndex > ThemeTones.length - 1 ? -newIndex : newIndex;
+    newIndex = Math.max(0, Math.min(ThemeTones.length - 1, newIndex));
+    return ThemeTones[newIndex];
+}
+
+export function brighterTone(themeMode, tone, level) {
+    level = Math.abs(level);
+    level = themeMode === "light" ? -level : level;
+    return shiftTone(tone, level);
+}
+
+export function darkerTone(themeMode, tone, level) {
+    level = Math.abs(level);
+    level = themeMode === "light" ? level : -level;
+    return shiftTone(tone, level);
+}
+
+```
+### Theme Mode Detection 
+By compare theme input backgroundColor and contrastColor => theme mode
+
+> sum rgb of backgroundColor > sum rgb of contrastColor ? "light" : "light"
 
 ### Self Tone Shift
 The concept is that any element has `theme:{color,tone}` and default them are `inherit`. `theme.tone` mean that it self `background tone` when default state. Any `color` still work fine and we only care about `tone`.
@@ -136,6 +178,8 @@ Examples:
 Palette `neutral` with 11 tones use for almost of elements. But in some case need slightly tone and it might out of tone range. Example `pre` has larg area neend too low contrast  => Use other gray color, above palette has `surfure` it lower than `neutral`
 
 > Out of tone range make other color 
+### Fixed Brand Color 
+Use brand color at tone at index 5 always equals as input in palette. Creat multile color shape of brand and use at index 5
 
 ## Color Token Export Format
 Value of element should use css variables like element.style.color = var(--bare-primary) Container set attributes "data-theme="light" or data-theme="dark" => auto change color of element where use css variable
