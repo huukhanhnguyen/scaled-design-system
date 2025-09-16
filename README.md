@@ -33,32 +33,32 @@ LightTheme
 ```js
 {
   palette: {
-        neutral: "#7f7a7f",
-        surface: "#a8a8a8",
-        primary: "#1677FF",
-        secondary: "#f759ab",
-        error: "#ff4d4f",
-        attention: "#ff6a4d",
-        success: "#1bab50",
-        warning: "#fb923c",
-        info: "#22d3ee",
-        highlight: "#ffcc00",
-    },
-    backgroundColor: "#ffffff",
-    contrastColor: "#000000",
-    toneScale: {
-        plain: 0, // white
-        bare: 0.05,
-        slight: 0.125,
-        subtle: 0.225,
-        soft: 0.35,
-        base: 0.5,
-        sharp: 0.55,
-        strong: 0.625,
-        bold: 0.725,
-        intense: 0.85,
-        extreme: 1, // black
-    },
+    neutral: "#7f7a7f",
+    surface: "#a8a8a8",
+    primary: "#1677FF",
+    secondary: "#f759ab",
+    error: "#ff4d4f",
+    attention: "#ff6a4d",
+    success: "#1bab50",
+    warning: "#fb923c",
+    info: "#22d3ee",
+    highlight: "#ffcc00",
+  },
+  backgroundColor: "#ffffff",
+  contrastColor: "#000000",
+  toneScale: {
+    0: 0, //backgroundColor
+    1: 0.05,
+    2: 0.125,
+    3: 0.225,
+    4: 0.35,
+    5: 0.5, // palette input
+    6: 0.55,
+    7: 0.625,
+    8: 0.725,
+    9: 0.85,
+    10: 1, //contrastColor
+  },
 }
 ```
 Darktheme inherit LightTheme and update
@@ -68,26 +68,21 @@ Darktheme inherit LightTheme and update
     backgroundColor: "#000000",
     contrastColor: "#ffffff",
     toneScale: {
-        plain: 0, // black
-        bare: 0.15,
-        slight: 0.275,
-        subtle: 0.375,
-        soft: 0.45,
-        base: 0.5,
-        sharp: 0.65,
-        strong: 0.775,
-        bold: 0.875,
-        intense: 0.95,
-        extreme: 1, // white
+        0: 0, //backgroundColor
+        1: 0.15,
+        2: 0.275,
+        3: 0.375,
+        4: 0.45,
+        5: 0.5, // palette input
+        6: 0.65,
+        7: 0.775,
+        8: 0.875,
+        9: 0.95,
+        10: 1, //contrastColor
     }
 }
 
 ```
-
-### Tones
-- `plain → bare → slight → subtle → soft → base → sharp → strong → bold→ intense→ extreme`
-- `plain` nearly to backgroundColor
-- `extreme` nearly to contrastColor
 
 > Why 11 color scales ? Excludes (plain/extreme) => 9 real color scales. Reference `Chakra` and some ui lib has arround 11 color scale but them has not perceptual visual difference for human eyes => 9 real color scales best fit
 
@@ -106,30 +101,6 @@ color = backgroundColor + (themeColor - backgroundColor) * toneScale/scale
 
 // toneScale > scale
 color = contrastColor + (contrastColor - themeColor) * (toneScale-scale)/(1-scale)
-```
-
-### Balance Tone Function
-
-- At middle tone scale `base` (input color) => has 2 side of scales
-- At start side shift forward and end side shift backward
-- Instead turn direction at middle (index 6) => turn early at (index 5) => expected human likely on filled area text must same color outer area. Example button with color primary(or any) at tone basefilled as input color => text ±6 backforward to `plain` (same as background) instead forward `extreme` (black)
-
-- Ending ensure clamp tone 
-
-1. Instead move forware and invert at middle (index 6) => early invert at  
-- Auto clamp when out of range
-```js
-
-export function balanceTone(tone, level) {
-    const ThemeTones = ["plain","bare","slight","subtle","soft","base","sharp","strong","bold","intense","extreme"] 
-    const index = ThemeTones.findIndex((e) => e === tone);
-    if (index === -1) return tone;
-    // invert point at index 5 ensure text nearly background like human expected
-    let newIndex = index <= 5 ? index + level : index - level
-    newIndex = newIndex < 0 || newIndex > ThemeTones.length - 1 ? - newIndex : newIndex
-    newIndex = Math.max(0, Math.min(ThemeTones.length - 1, newIndex));
-    return ThemeTones[newIndex];
-}
 ```
 
 ### Self Tone Shift
@@ -170,10 +141,10 @@ Palette `neutral` with 11 tones use for almost of elements. But in some case nee
 Value of element should use css variables like element.style.color = var(--bare-primary) Container set attributes "data-theme="light" or data-theme="dark" => auto change color of element where use css variable
 ```css
 :[data-theme="light"] {
-  --bare-primary: #d1e4ff; //near white
+  --primary-1: #d1e4ff; //near palette backgroundColor
 }
 :[data-theme="dark"] {
-  --soft-primary: #02204d; // near dark
+  --primary-1: #02204d; // near palette contrastColor
 }
 ```
 > Edge case why use same color in multiple theme => use direct token like "#d1e4ff"
