@@ -206,11 +206,11 @@ Why 1/6 lineHeight is best unit
 - minimum "1/12": "0.125em" ~2px => border/offset 
 ```js
     lineStep: { //n*lineHeight(1.5em)
-        "1/12": "0.125em",
-        "1/6": "0.25em",
-        "2/6": "0.5em",
-        "3/6": "0.75em",
-        "4/6": "1em",
+        "1/12": "0.125em", // compact paddingBlock => bar component 
+        "1/6": "0.25em", // regular paddingBlock => bar component 
+        "2/6": "0.5em", // paddingInline radius gap => bar component 
+        "3/6": "0.75em", // paddingInline => bar component 
+        "4/6": "1em", // > 4/6 padding/radius/gap for card/modal/panel => block component
         "5/6": "1.25em",
         "6/6": "1.5em",
         "9/6": "2.25em",
